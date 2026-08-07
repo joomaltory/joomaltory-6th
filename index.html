@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#FFD200" />
+<title>주말토리 6주년 · 우리가 함께 보낸 주말</title>
+
+<!-- 브랜드 폰트: Pretendard (없으면 시스템 폰트로 자동 대체) -->
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+
+<style>
+  /* =========================================================
+     주말토리 6주년 캠페인 — "6년, 우리가 함께 보낸 주말"
+     이메일 조회 → 결산 스토리(한 장씩 넘기기) → 결과 홈
+              (이벤트 응모 · 자랑카드 · 키링 굿즈 · 롤링페이퍼)
+     NFC 랜딩 톤앤매너 계승 (옐로우/코랄 · 라운드 · 3D 버튼)
+     ========================================================= */
+
+  :root {
+    --yellow: #FFD200; --yellow-deep: #FFC400;
+    --coral: #FF6446; --coral-deep: #F04E30;
+    --lime: #C6F542; --pink: #FFB2EA; --green: #12B24A;
+    --ink: #1E1A12; --ink-soft: #8A8172;
+    --paper: #FFFFFF; --cream: #FFF8EC;
+    --shadow: 0 12px 30px rgba(30,26,18,0.13);
+    --shadow-sm: 0 5px 16px rgba(30,26,18,0.10);
+    --radius: 26px;
+    --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+            "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body { font-family: var(--font); color: var(--ink); background: #EDE3D2; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; }
+
+  #app {
+    position: relative; width: 100%; max-width: 480px; height: 100dvh; margin: 0 auto;
+    overflow: hidden; background: linear-gradient(175deg, #FFF3D6 0%, #FFF8EC 55%, #FFEDE0 100%);
+    display: flex; flex-direction: column;
+  }
+
+  .screen {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    padding: 26px 22px calc(26px + env(safe-area-inset-bottom));
+    opacity: 0; visibility: hidden; transform: translateY(14px);
+    transition: opacity .4s ease, transform .4s ease, visibility .4s;
+    overflow-y: auto; -webkit-overflow-scrolling: touch; z-index: 1;
+  }
+  .screen.active { opacity: 1; visibility: visible; transform: translateY(0); }
+
+  .sky-decor { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .sky-decor .blob { position: absolute; border-radius: 50%; filter: blur(2px); opacity: .5; }
+  .sky-decor .b1 { width: 150px; height: 150px; background: #FFE59A; top: -40px; right: -30px; }
+  .sky-decor .b2 { width: 120px; height: 120px; background: #FFC7EC; bottom: 60px; left: -40px; opacity:.4; }
+  .sky-decor .star { position: absolute; color: var(--coral); font-size: 18px; opacity: .8; animation: twinkle 2.6s ease-in-out infinite; }
+  @keyframes twinkle { 0%,100%{opacity:.35;transform:scale(.85)} 50%{opacity:.95;transform:scale(1.1)} }
+
+  .muted { color: var(--ink-soft); } .center { text-align: center; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  .tori { animation: bob 3.4s ease-in-out infinite; filter: drop-shadow(0 14px 14px rgba(30,26,18,.14)); }
+  @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-11px)} }
+
+  .btn-primary {
+    background: var(--coral); color: #fff; font-weight: 800; font-size: 17px;
+    padding: 17px 20px; border-radius: 18px; box-shadow: 0 8px 0 var(--coral-deep);
+    transition: transform .1s ease, box-shadow .1s ease, background .2s ease; width: 100%; letter-spacing: -0.3px;
+  }
+  .btn-primary:active { transform: translateY(5px); box-shadow: 0 3px 0 var(--coral-deep); }
+  .btn-primary:disabled { background: #EAD9C4; box-shadow: 0 6px 0 #D8C6B0; color:#fff; }
+  .btn-ghost {
+    background: rgba(255,255,255,.85); color: var(--ink); font-weight: 800; font-size: 15.5px;
+    padding: 15px 18px; border-radius: 16px; width: 100%; box-shadow: var(--shadow-sm);
+    border: 2.5px solid #F0E7D6; transition: transform .1s ease, border-color .2s;
+  }
+  .btn-ghost:active { transform: scale(.98); border-color: var(--yellow); }
+  .badge { display:inline-flex; align-items:center; gap:6px; background: var(--yellow); color: var(--ink); font-weight:800; font-size:12.5px; padding: 6px 14px; border-radius: 100px; box-shadow: var(--shadow-sm); }
+  .back-btn {
+    position: relative; z-index: 3; align-self: flex-start; display: inline-flex; align-items: center; gap: 5px;
+    font-weight: 800; font-size: 15px; color: var(--ink); background: rgba(255,255,255,.82); backdrop-filter: blur(6px);
+    padding: 10px 16px 10px 12px; border-radius: 100px; box-shadow: var(--shadow-sm); margin-bottom: 10px;
+  }
+  .back-btn:active { transform: scale(0.95); }
+  .footer-note { text-align: center; font-size: 11px; color: #B9AE99; padding: 16px 0 2px; font-weight: 700; }
+
+  /* 공용 골드 티어 필 (배지 등급) */
+  .tier-pill {
+    display:inline-flex; align-items:center; gap:6px;
+    background: linear-gradient(135deg,#FFE9A8,#F5C518); color:#6B4E00;
+    font-weight:800; font-size:13.5px; letter-spacing:-0.2px;
+    padding:8px 17px; border-radius:100px; border:2px solid #fff; box-shadow: 0 5px 14px rgba(245,197,24,.42);
+  }
+  .pct-chip { display:inline-flex; align-items:center; gap:5px; background: #FFF1BF; color: #8A6A00; font-weight: 800; font-size: 13px; padding: 7px 13px; border-radius: 100px; }
+  .coin-break { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .coin-break span { background: rgba(255,255,255,.55); color:#6B4A0A; font-size:12px; font-weight:800; padding:6px 12px; border-radius:100px; }
+
+  /* 구분선 */
+  .section-divider { display:flex; align-items:center; gap:12px; margin: 32px 2px 4px; }
+  .section-divider .line { flex:1; height: 2px; background: #EDE0C9; border-radius:2px; }
+  .section-divider .dtxt { font-size: 13px; font-weight: 800; color: var(--ink-soft); white-space:nowrap; }
+
+  /* =========================================================
+     화면 1 — 인트로
+     ========================================================= */
+  #intro { justify-content: center; align-items: center; text-align: center; }
+  #intro .hero { width: 258px; margin-bottom: 20px; }
+  #intro .six { font-size: 82px; font-weight: 800; line-height: .9; letter-spacing: -3px; color: var(--coral); text-shadow: 0 6px 0 #fff, 0 8px 14px rgba(240,78,48,.25); margin: 2px 0 4px; }
+  #intro .six small { font-size: 26px; letter-spacing: -1px; }
+  #intro h1 { font-size: 27px; font-weight: 800; letter-spacing: -1.1px; line-height:1.3; margin-top: 6px; }
+  #intro h1 b { color: var(--coral); }
+  #intro .sub { font-size: 14.5px; color: var(--ink-soft); margin-top: 11px; margin-bottom: 26px; line-height: 1.6; font-weight:600; }
+  #intro .btn-primary { max-width: 340px; }
+  #intro .disclaimer { font-size: 11.5px; color: #B9AE99; margin-top: 14px; font-weight: 600; line-height:1.5; max-width: 320px; }
+
+  /* =========================================================
+     화면 2 — 이메일 조회
+     ========================================================= */
+  #enter { justify-content: center; }
+  #enter .enter-inner { max-width: 360px; margin: 0 auto; width: 100%; }
+  #enter .emo-badge { font-size: 54px; text-align:center; margin-bottom: 14px; animation: bob 3s ease-in-out infinite; }
+  #enter h2 { font-size: 23px; font-weight: 800; letter-spacing: -0.8px; line-height:1.4; text-align:center; }
+  #enter h2 b { color: var(--coral); }
+  #enter p.lead { font-size: 13.5px; color: var(--ink-soft); margin-top: 10px; text-align:center; font-weight: 700; line-height:1.6; }
+  .field { width: 100%; margin-top: 22px; }
+  .field label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 8px; padding-left: 5px; }
+  .field input { width: 100%; font-family: inherit; font-size: 16px; font-weight: 600; color: var(--ink); background: var(--paper); border: 2.5px solid #F0E7D6; border-radius: 16px; padding: 16px; outline: none; transition: border-color .2s ease; }
+  .field input::placeholder { color: #C7BCA8; font-weight:500; }
+  .field input:focus { border-color: var(--yellow); }
+  #enter .btn-primary { margin-top: 16px; }
+  #enter .privacy { font-size: 11.5px; color: #B9AE99; margin-top: 14px; font-weight: 600; line-height:1.55; text-align:center; }
+
+  /* =========================================================
+     화면 3 — 리포트 생성중
+     ========================================================= */
+  #loading { justify-content:center; align-items:center; text-align:center; }
+  #loading .spin-wrap { width: 130px; height: 130px; position: relative; margin-bottom: 26px; }
+  #loading .ring { position:absolute; inset:0; border: 7px solid #FFE7A8; border-top-color: var(--coral); border-radius: 50%; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading .spin-emo { position:absolute; inset:0; display:grid; place-items:center; font-size: 52px; animation: bob 1.6s ease-in-out infinite; }
+  #loading h2 { font-size: 21px; font-weight: 800; letter-spacing:-0.6px; }
+  #loading .load-line { font-size: 14px; color: var(--ink-soft); margin-top: 12px; font-weight: 700; min-height: 20px; }
+  #loading .load-mail { font-size: 12.5px; color: var(--coral); margin-top: 8px; font-weight: 800; }
+
+  /* =========================================================
+     화면 4 — 결산 스토리 (한 장씩 넘기기)
+     ========================================================= */
+  #story { padding: 0; overflow: hidden; }
+  .story-bar { display:flex; gap:5px; padding: 16px 16px 8px; position: relative; z-index: 2; }
+  .story-bar i { flex:1; height:4px; border-radius:4px; background:#EADFC8; transition: background .3s; }
+  .story-bar i.on { background: var(--coral); }
+  .story-head { display:flex; justify-content:space-between; align-items:center; padding: 2px 16px 2px; position:relative; z-index:2; }
+  .story-back { font-size:24px; font-weight:800; color:var(--ink); width:34px; height:34px; line-height:1; visibility:hidden; }
+  .story-back.show { visibility:visible; }
+  .story-skip { font-size:13px; font-weight:800; color:var(--ink-soft); background:rgba(255,255,255,.7); padding:8px 14px; border-radius:100px; }
+  .slide-wrap { flex:1; display:flex; align-items:center; justify-content:center; padding: 6px 26px 10px; overflow-y:auto; -webkit-overflow-scrolling:touch; position:relative; z-index:1; }
+  .slide-wrap.wrap-top { align-items:flex-start; padding-top: 14px; }
+  .s-coin-hero { font-size:54px; font-weight:800; letter-spacing:-2px; color:#E39A00; line-height:1; }
+  .s-actionhead { font-size:15.5px; font-weight:800; color:var(--ink); margin-top:26px; margin-bottom:2px; }
+  .slide-inner { text-align:center; width:100%; max-width:360px; }
+  .slide-inner.anim { animation: slideIn .55s cubic-bezier(.2,.8,.3,1); }
+  @keyframes slideIn { from{opacity:0; transform:translateY(26px) scale(.96)} to{opacity:1; transform:none} }
+  .s-kicker { font-size:14px; font-weight:800; color:var(--coral); margin-bottom:18px; }
+  .s-char { width:172px; margin:0 auto 14px; }
+  .s-big-word { font-size:34px; font-weight:800; letter-spacing:-1.2px; color:var(--ink); line-height:1.15; }
+  .s-tag { display:inline-block; margin-top:10px; font-size:12.5px; font-weight:800; color:#8A6A00; background:#FFF1BF; padding:6px 14px; border-radius:100px; }
+  .s-huge { font-size:74px; font-weight:800; letter-spacing:-3px; color:var(--ink); line-height:1; }
+  .s-huge.c { color:var(--coral); } .s-huge.gold { color:#E39A00; }
+  .s-huge .u { font-size:30px; letter-spacing:-1px; }
+  .s-two { display:flex; gap:22px; justify-content:center; align-items:flex-start; }
+  .s-mid { font-size:40px; font-weight:800; letter-spacing:-1.5px; } .s-mid.c { color:var(--coral); }
+  .s-sub { font-size:13px; color:var(--ink-soft); font-weight:700; margin-top:4px; }
+  .s-emo { font-size:86px; line-height:1; margin-bottom:10px; }
+  .s-cap { font-size:14.5px; color:var(--ink-soft); font-weight:600; line-height:1.6; margin-top:20px; }
+  .s-cap b { color:var(--ink); }
+  .s-gauge { height:16px; background:#F1E7D3; border-radius:100px; overflow:hidden; margin:18px auto 0; max-width:280px; }
+  .s-gauge > i { display:block; height:100%; width:0; border-radius:100px; background:linear-gradient(90deg,var(--yellow),var(--coral)); transition:width 1.2s cubic-bezier(.2,.8,.3,1); }
+  .s-miss { display:flex; align-items:center; gap:13px; text-align:left; background:var(--cream); border:2.5px solid #F0E7D6; border-radius:18px; padding:16px; margin-top:4px; }
+  .s-miss:active { transform:scale(.98); border-color:var(--yellow); }
+  .s-miss .miss-emo { width:48px; height:48px; border-radius:14px; background:#FFE1E8; display:grid; place-items:center; font-size:24px; flex-shrink:0; }
+  .s-miss .miss-t { font-size:14px; font-weight:800; letter-spacing:-.3px; line-height:1.35; }
+  .s-miss .miss-t small { display:block; font-size:11.5px; color:var(--coral); font-weight:800; margin-top:3px; }
+  .story-foot { padding: 10px 22px calc(20px + env(safe-area-inset-bottom)); position:relative; z-index:2; }
+  .story-hint { text-align:center; font-size:11.5px; font-weight:700; color:#C4B79E; margin-bottom:10px; }
+
+  /* =========================================================
+     화면 5 — 결과 홈 (대시보드)
+     ========================================================= */
+  #home { display:block; }
+  .home-head { text-align:center; padding-top: 8px; }
+  .home-head .kicker { font-size:12.5px; font-weight:800; color:var(--coral); }
+  .recap-card { background:linear-gradient(165deg,#FFFDF7,#FFF2DE); border:2px solid #FBE7BE; border-radius:var(--radius); padding:22px 20px; text-align:center; box-shadow:var(--shadow-sm); margin-top:12px; }
+  .recap-card img { width:104px; margin:0 auto 6px; }
+  .recap-card .r-name { font-size:20px; font-weight:800; letter-spacing:-.6px; }
+  .recap-card .r-name b { color:var(--coral); }
+  .recap-card .r-chips { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px; }
+  .recap-card .r-type { background:#FFF1BF; color:#8A6A00; font-weight:800; font-size:12.5px; padding:8px 14px; border-radius:100px; }
+  .recap-card .r-coin { margin-top:14px; font-size:14px; font-weight:800; color:#B98A00; }
+  .recap-card .r-coin b { font-size:19px; color:#E39A00; }
+  .replay-btn { margin-top:16px; font-size:13px; font-weight:800; color:var(--ink-soft); background:rgba(255,255,255,.85); border:2px solid #F0E7D6; padding:11px 18px; border-radius:100px; }
+  .replay-btn:active { transform:scale(.97); }
+
+  .coin-balance { text-align:center; font-size:14px; font-weight:800; color:var(--ink-soft); margin: 12px 0 2px; }
+  .coin-balance b { color: var(--coral); font-size:19px; }
+  .prize-list { display:flex; flex-direction:column; gap:12px; margin-top:12px; }
+  .prize-card { display:flex; align-items:center; gap:13px; background:var(--paper); border-radius:20px; padding:14px; box-shadow:var(--shadow-sm); border:2.5px solid #F3EAD8; }
+  .prize-media { width:60px; height:60px; border-radius:16px; flex-shrink:0; display:grid; place-items:center; font-size:30px; overflow:hidden; position:relative; }
+  .prize-media img { width:100%; height:100%; object-fit:cover; }
+  .prize-media.noimg::after { content: attr(data-emo); font-size:28px; }
+  .prize-media.t-green { background:#E3F6E1; } .prize-media.t-coral { background:#FFE1DA; } .prize-media.t-pink { background:#FDE4F3; }
+  .prize-info { flex:1; min-width:0; }
+  .prize-info .pname { font-size:15px; font-weight:800; letter-spacing:-.3px; }
+  .prize-info .pval { font-size:12px; color:var(--ink-soft); font-weight:700; margin-top:3px; }
+  .prize-info .pcost { font-size:12.5px; color:#B98A00; font-weight:800; margin-top:6px; }
+  .prize-right { text-align:center; flex-shrink:0; }
+  .prize-right .pentries { font-size:11px; font-weight:800; color:var(--coral); margin-bottom:6px; }
+  .pbtn { background:var(--coral); color:#fff; font-weight:800; font-size:14px; padding:11px 15px; border-radius:13px; box-shadow:0 4px 0 var(--coral-deep); transition: transform .1s, box-shadow .1s; white-space:nowrap; }
+  .pbtn:active { transform:translateY(3px); box-shadow:0 1px 0 var(--coral-deep); }
+  .pbtn:disabled { background:#E6DAC6; box-shadow:0 4px 0 #D3C4AA; color:#fff; }
+  .event-foot { margin-top:14px; text-align:center; }
+  .reset-link { font-size:12px; font-weight:700; color:#B9AE99; text-decoration:underline; }
+  .event-hint { font-size:11px; color:#B9AE99; font-weight:600; margin-top:8px; line-height:1.5; }
+
+  /* 액션 카드 (자랑카드) */
+  .action-card { display:flex; align-items:center; gap:14px; width:100%; background:var(--paper); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow-sm); border:2.5px solid transparent; text-align:left; margin-top:12px; transition:transform .12s, border-color .2s; }
+  .action-card:active { transform:scale(.98); border-color:var(--yellow); }
+  .ac-emo { width:52px; height:52px; border-radius:16px; background:#FFF1BF; display:grid; place-items:center; font-size:26px; flex-shrink:0; }
+  .ac-text { flex:1; } .ac-t { font-size:16px; font-weight:800; letter-spacing:-.3px; } .ac-d { font-size:12.5px; color:var(--ink-soft); font-weight:600; margin-top:3px; }
+  .ac-arrow { margin-left:auto; color:#D9CDB8; font-size:22px; font-weight:800; }
+
+  /* NFC 키링 굿즈 카드 (크림/골드 + 실사) */
+  .goods-card { margin-top:12px; border-radius: var(--radius); padding: 20px 18px; position: relative; overflow: hidden; background: linear-gradient(165deg, #FFFCF2 0%, #FFF1D2 100%); border: 2px solid #F5DA97; box-shadow: 0 16px 34px rgba(196,150,40,.20); }
+  .goods-badge { display:inline-flex; align-items:center; gap:6px; background:#FFD200; color:#7A5A00; font-weight:800; font-size:12px; padding:6px 13px; border-radius:100px; box-shadow: 0 3px 8px rgba(245,197,24,.4); }
+  .goods-top { display:flex; gap:15px; align-items:center; margin-top: 15px; }
+  .goods-photo { width: 126px; height: 126px; flex-shrink:0; border-radius: 20px; overflow:hidden; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(30,26,18,.16); background: linear-gradient(160deg,#FFE9A8,#FFD98E); position: relative; }
+  .goods-photo img { width:100%; height:100%; object-fit: cover; display:block; }
+  .goods-photo.noimg::after { content:"🔑"; position:absolute; inset:0; display:grid; place-items:center; font-size:52px; transform: rotate(-8deg); filter: drop-shadow(0 4px 6px rgba(0,0,0,.15)); }
+  .goods-photo.noimg .ph-tag { display:none; }
+  .goods-photo .ph-tag { position:absolute; left:0; bottom:0; right:0; background: rgba(30,26,18,.62); color:#fff; font-size:10px; font-weight:800; text-align:center; padding:4px 0; letter-spacing:-.2px; }
+  .goods-info h3 { color: var(--ink); font-size: 22px; font-weight: 800; letter-spacing:-0.8px; line-height:1.2; }
+  .goods-info .g-sub { color: #9A8A62; font-size: 13px; font-weight: 700; margin-top: 8px; line-height:1.55; }
+  .goods-info .g-sub b { color: var(--coral-deep); }
+  .goods-card .g-meta { display:flex; gap:7px; margin-top: 16px; flex-wrap:wrap; }
+  .goods-card .g-meta span { background: #FFF1BF; color:#8A6A00; font-size:11.5px; font-weight:800; padding:6px 12px; border-radius:100px; }
+  .goods-card .g-btn { margin-top: 16px; width: 100%; background: var(--coral); color:#fff; font-weight:800; font-size:16px; padding: 15px; border-radius: 15px; box-shadow: 0 6px 0 var(--coral-deep); transition: transform .1s, box-shadow .1s; }
+  .goods-card .g-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--coral-deep); }
+
+  /* 롤링페이퍼 */
+  .guest-head { text-align:center; margin-top: 12px; }
+  .guest-head h3 { font-size: 22px; font-weight:800; letter-spacing:-0.7px; line-height:1.35; }
+  .guest-head h3 b { color: var(--coral); }
+  .guest-head p { font-size: 13px; color: var(--ink-soft); margin-top: 8px; font-weight:700; line-height:1.55; }
+  .guest-form { background: var(--paper); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-sm); margin-top: 16px; }
+  .guest-form textarea { width:100%; font-family:inherit; font-size:15px; font-weight:600; color:var(--ink); resize:none; border: 2.5px solid #F0E7D6; border-radius: 14px; padding: 13px; outline:none; min-height: 78px; line-height:1.5; }
+  .guest-form textarea:focus { border-color: var(--yellow); }
+  .guest-form .row { display:flex; gap:10px; margin-top:11px; align-items:center; }
+  .guest-form .row input { flex:1; font-family:inherit; font-size:14px; font-weight:700; border:2.5px solid #F0E7D6; border-radius:14px; padding:12px 13px; outline:none; }
+  .guest-form .row input:focus { border-color: var(--yellow); }
+  .guest-form .row button { flex-shrink:0; background: var(--coral); color:#fff; font-weight:800; font-size:14px; padding: 12px 18px; border-radius:14px; box-shadow: 0 4px 0 var(--coral-deep); }
+  .guest-form .row button:active { transform: translateY(3px); box-shadow:0 1px 0 var(--coral-deep); }
+  .guest-count { text-align:center; font-size:12.5px; font-weight:800; color:var(--ink-soft); margin: 16px 0 4px; }
+  .guest-count b { color: var(--coral); }
+  .wall { display:flex; flex-direction:column; gap:11px; padding-bottom: 6px; }
+  .note { background: var(--paper); border-radius: 18px; padding: 15px 16px; box-shadow: var(--shadow-sm); border-left: 5px solid var(--yellow); animation: fadeUp .35s ease; }
+  @keyframes fadeUp { from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:translateY(0)} }
+  .note:nth-child(3n) { border-left-color: var(--coral); } .note:nth-child(3n+1) { border-left-color: var(--pink); }
+  /* 롤링페이퍼가 쫙 펼쳐지는 카스케이드 */
+  .wallList .note { animation: fadeUp .5s ease backwards; }
+  .wallList .note:nth-child(1){animation-delay:.04s} .wallList .note:nth-child(2){animation-delay:.11s}
+  .wallList .note:nth-child(3){animation-delay:.18s} .wallList .note:nth-child(4){animation-delay:.25s}
+  .wallList .note:nth-child(5){animation-delay:.32s} .wallList .note:nth-child(6){animation-delay:.39s}
+  .wallList .note:nth-child(7){animation-delay:.46s} .wallList .note:nth-child(8){animation-delay:.53s}
+  .wallList .note:nth-child(n+9){animation-delay:.6s}
+  .note .msg { font-size: 14px; font-weight: 600; line-height:1.55; color: var(--ink); letter-spacing:-0.2px; }
+  .note .who { font-size: 12px; font-weight: 800; color: var(--ink-soft); margin-top: 9px; display:flex; gap:7px; align-items:center; }
+  .note .who .tag { color: var(--coral); }
+
+  /* =========================================================
+     화면 6 — 자랑 공유카드
+     ========================================================= */
+  #share { padding-top: 18px; }
+  .share-head { text-align:center; margin-bottom: 6px; }
+  .share-head h2 { font-size: 22px; font-weight:800; letter-spacing:-0.7px; line-height:1.35; }
+  .share-head h2 b { color: var(--coral); }
+  .share-head p { font-size: 13px; color: var(--ink-soft); margin-top: 8px; font-weight:700; }
+  .card-frame { margin: 18px auto 0; width: 100%; max-width: 300px; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); background:#000; }
+  .card-frame canvas { display:block; width: 100%; height: auto; }
+  .event-box { background: var(--paper); border: 2.5px dashed #FFD9A0; border-radius: 20px; padding: 16px 18px; margin-top: 18px; text-align:left; }
+  .event-box h3 { font-size: 15px; font-weight: 800; display:flex; align-items:center; gap:7px; }
+  .event-box p { font-size: 13px; color: var(--ink-soft); margin-top: 9px; font-weight:600; line-height:1.6; }
+  .event-box .hl { color: var(--coral); font-weight:800; }
+  .share-cta { margin-top: 18px; display:flex; flex-direction:column; gap:11px; }
+
+  .toast { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px); background: var(--ink); color:#fff; font-size: 13.5px; font-weight: 700; padding: 12px 20px; border-radius: 100px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: opacity .3s, transform .3s; z-index: 50; white-space: nowrap; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-height: 720px) {
+    #intro .hero { width: 200px; } #intro .six { font-size: 66px; }
+    .s-char { width: 140px; } .s-huge { font-size: 60px; } .s-emo { font-size: 70px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="sky-decor" id="skyDecor">
+    <div class="blob b1"></div><div class="blob b2"></div>
+    <div class="star" style="top:12%;left:12%;">✦</div>
+    <div class="star" style="top:22%;right:16%;animation-delay:.7s;">✦</div>
+    <div class="star" style="bottom:20%;left:18%;animation-delay:1.3s;">✧</div>
+  </div>
+
+  <!-- ============ 화면 1 · 인트로 ============ -->
+  <section class="screen active" id="intro">
+    <img class="hero tori" src="welcome-hero.png" alt="주말토리 친구들" />
+    <div class="badge">🎉 주말토리 6주년 결산</div>
+    <div class="six">6<small>주년</small></div>
+    <h1>6년, 우리가 함께 보낸 <b>주말</b></h1>
+    <p class="sub">매주 주말마다 쌓인<br/><b style="color:var(--ink)">나와 주말토리의 기록</b>을 한 장으로.<br/>나는 어떤 구독자였을까요?</p>
+    <button class="btn-primary" onclick="go('enter')">내 6주년 리포트 열어보기 →</button>
+    <p class="disclaimer">* 체험판 미리보기입니다. 실제 리포트는 구독 데이터를 기반으로 이메일로 발송돼요.</p>
+  </section>
+
+  <!-- ============ 화면 2 · 이메일 조회 ============ -->
+  <section class="screen" id="enter">
+    <div class="enter-inner">
+      <div class="emo-badge">📮</div>
+      <h2>구독하신 <b>이메일</b>로<br/>내 6주년 결산을 불러올게요</h2>
+      <p class="lead">주말토리를 받아보는 이메일 주소를 입력하면,<br/>그동안의 기록을 한 장으로 정리해 드려요.</p>
+      <div class="field">
+        <label>이메일 주소</label>
+        <input id="inEmail" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" />
+      </div>
+      <button class="btn-primary" id="btnLookup" onclick="lookup()">내 결산 리포트 불러오기 🔍</button>
+      <p class="privacy">🔒 입력한 이메일은 결산 조회에만 사용되며 별도로 저장되지 않아요.<br/>(체험판: 실제 서비스는 스티비 구독 데이터를 조회합니다.)</p>
+    </div>
+  </section>
+
+  <!-- ============ 화면 3 · 생성중 ============ -->
+  <section class="screen" id="loading">
+    <div class="spin-wrap"><div class="ring"></div><div class="spin-emo">🧾</div></div>
+    <h2>6년의 주말을<br/>정산하고 있어요</h2>
+    <p class="load-line" id="loadLine">받은 편지를 세는 중…</p>
+    <p class="load-mail" id="loadMail"></p>
+  </section>
+
+  <!-- ============ 화면 4 · 결산 스토리 ============ -->
+  <section class="screen" id="story">
+    <div class="story-bar" id="storyBar"></div>
+    <div class="story-head">
+      <button class="story-back" id="storyBack" onclick="prevSlide()">‹</button>
+      <button class="story-skip" onclick="skipStory()">건너뛰기 →</button>
+    </div>
+    <div class="slide-wrap" id="slideWrap"></div>
+    <div class="story-foot">
+      <div class="story-hint">톡 넘기며 내 6주년을 확인해 보세요</div>
+      <button class="btn-primary" id="storyNext" onclick="nextSlide()">다음 →</button>
+    </div>
+  </section>
+
+  <!-- ============ 화면 5 · 결과 홈 ============ -->
+  <section class="screen" id="home">
+    <div class="home-head"><div class="kicker">🎉 주말토리 6주년 결산</div></div>
+    <div class="recap-card" id="recapCard"></div>
+
+    <div class="section-divider"><span class="line"></span><span class="dtxt">🎁 코인으로 응모하는 이벤트</span><span class="line"></span></div>
+    <div class="coin-balance">응모 가능 코인 <b class="coinBalVal">0</b> 🪙</div>
+    <div class="prize-list prizeList"></div>
+    <div class="event-foot">
+      <button class="reset-link" onclick="resetEntries()">응모 내역 초기화</button>
+      <p class="event-hint">체험판: 응모 내역은 이 기기에만 저장돼요.<br/>실제 추첨은 이벤트 종료 후 진행됩니다.</p>
+    </div>
+
+    <div class="section-divider"><span class="line"></span><span class="dtxt">✨ 더 즐기기</span><span class="line"></span></div>
+    <button class="action-card" onclick="go('share')">
+      <div class="ac-emo">🏆</div>
+      <div class="ac-text"><div class="ac-t">결산 자랑 카드 만들기</div><div class="ac-d">인스타 스토리용 카드로 저장 · 공유</div></div>
+      <div class="ac-arrow">›</div>
+    </button>
+
+    <div class="goods-card">
+      <div class="goods-badge">🔑 6주년 한정 굿즈</div>
+      <div class="goods-top">
+        <div class="goods-photo">
+          <img src="nfc-keyring.png" alt="주말토리 NFC 키링" onerror="this.parentElement.classList.add('noimg'); this.style.display='none';" />
+          <div class="ph-tag">실제 제품 컷</div>
+        </div>
+        <div class="goods-info">
+          <h3>주말토리<br/>NFC 키링</h3>
+          <p class="g-sub">폰에 톡 태그하면<br/><b>“이번 주말 뭐하지?”</b>가<br/>바로 시작돼요.</p>
+        </div>
+      </div>
+      <div class="g-meta"><span>🎁 6주년 기념가</span><span>⏳ 한정 수량</span><span>🚀 NFC 태깅</span></div>
+      <button class="g-btn" onclick="buyGoods()">6주년 키링 구매하러 가기 →</button>
+    </div>
+
+    <div class="section-divider"><span class="line"></span><span class="dtxt">🖊️ 6주년 롤링페이퍼</span><span class="line"></span></div>
+    <div class="guest-head">
+      <h3>우리, 여기 <b>함께</b> 남겨요</h3>
+      <p>주말토리에게, 그리고 함께한 구독자들에게<br/>한 마디 남겨주세요. 다음 편지에서 소개될지도!</p>
+    </div>
+    <div class="guest-form">
+      <textarea maxlength="140" placeholder="주말토리와의 6년, 한 문장으로 남겨볼까요?"></textarea>
+      <div class="row">
+        <input type="text" maxlength="12" placeholder="닉네임" />
+        <button onclick="postNote(this)">남기기</button>
+      </div>
+    </div>
+    <div class="guest-count">지금까지 <b class="gCountVal">0</b>개의 마음이 모였어요</div>
+    <div class="wall wallList"></div>
+    <p class="footer-note">따뜻한 한 마디는 다음 편지의 롤링페이퍼로 큐레이션돼요 💌</p>
+  </section>
+
+  <!-- ============ 화면 6 · 공유카드 ============ -->
+  <section class="screen" id="share">
+    <button class="back-btn" onclick="go('home')">‹ 결과 홈으로</button>
+    <div class="share-head">
+      <h2>이 카드, <b>자랑</b>하고 싶어질걸요</h2>
+      <p>인스타 스토리에 올리고 계정 태그하면 추첨 🎁</p>
+    </div>
+    <div class="card-frame"><canvas id="shareCanvas" width="540" height="960"></canvas></div>
+    <div class="share-cta">
+      <button class="btn-primary" onclick="downloadCard()">카드 이미지 저장하기 ↓</button>
+      <button class="btn-ghost" onclick="copyLink()">구독 링크 복사하기 🔗</button>
+    </div>
+    <div class="event-box">
+      <h3>🎁 6주년 인증 이벤트</h3>
+      <p>저장한 카드를 <span class="hl">인스타그램 스토리</span>에 올리고<br/><span class="hl">@joomaltory</span> 계정을 태그해 주세요.<br/>추첨을 통해 <b>6주년 한정 NFC 키링</b>을 보내드려요!</p>
+    </div>
+    <p class="footer-note">joomaltory.com · @joomaltory</p>
+  </section>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* =========================================================
+   설정값 (실배포 시 이 부분만 교체)
+   ========================================================= */
+const SUBSCRIBE_URL = "https://joomaltory.com";
+const GOODS_URL     = "https://joomaltory.com";   // TODO: 6주년 키링 굿즈 판매 페이지 URL
+const IG_HANDLE     = "@joomaltory";
+const TODAY = new Date(2026, 6, 28); // 2026-07-28 (6주년 시점)
+
+/* ── 주말 코인 규칙 ── */
+const COIN_PER_WEEK  = 10;
+const COIN_PER_OPEN  = 30;
+const BADGE_BONUS    = { founder:2000, keeper:1000, regular:500, sprout:200 };
+const DILIGENT_BONUS = 1000;
+
+/* ── 이벤트 경품 ── */
+const PRIZES = [
+  { id:"kyobo",   emo:"📚", name:"교보문고 1만원권",    value:"10,000원 상당",  cost:500,  tone:"green" },
+  { id:"keyring", emo:"🔑", name:"주말토리 키링 세트",   value:"30,000원 상당",  cost:2000, tone:"coral", img:"nfc-keyring.png" },
+  { id:"spa",     emo:"💆", name:"헤드스파 이용권",      value:"100,000원 상당", cost:6000, tone:"pink" }
+];
+
+const state = { email:"", nick:"", data:null };
+
+const $ = (s, el=document) => el.querySelector(s);
+const $$ = (s, el=document) => [...el.querySelectorAll(s)];
+
+function go(id){
+  $$(".screen").forEach(s => s.classList.remove("active"));
+  const el = document.getElementById(id);
+  el.classList.add("active"); el.scrollTop = 0;
+  if(id === "enter") setTimeout(()=>{ const i=$("#inEmail"); if(i) i.focus(); }, 300);
+}
+function toast(msg){ const t=$("#toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1900); }
+
+function hashStr(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619);} return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function nickFromEmail(email){ let l=(email.split("@")[0]||"주말").replace(/[^가-힣a-zA-Z0-9._-]/g,""); if(l.length>12) l=l.slice(0,12); return l||"주말"; }
+function maskEmail(email){ const [l,d]=email.split("@"); if(!d) return email; return l.slice(0,Math.min(2,l.length)) + "•".repeat(Math.max(2,l.length-2)) + "@" + d; }
+
+/* =========================================================
+   이메일 조회 → 데이터 산출
+   ========================================================= */
+function lookup(){
+  const email=$("#inEmail").value.trim();
+  if(!validEmail(email)){ toast("이메일 주소를 정확히 입력해 주세요 📮"); $("#inEmail").focus(); return; }
+  state.email=email; state.nick=nickFromEmail(email);
+  buildData();
+  $("#loadMail").textContent=maskEmail(email);
+  go('loading'); runLoading();
+}
+
+const TYPE_INFO = {
+  alarm:     { name:"알림 대기파",   img:"tori-excited.png", tag:"발행 즉시 오픈러", desc:"편지가 도착하는 순간을 놓치지 않는 당신. 주말토리에게 가장 먼저 마음을 열어주는, 설레는 알림 대기파예요." },
+  taste:     { name:"취향 저격파",   img:"tori-curious.png", tag:"제목만 봐도 아는 사람", desc:"제목만 슥 보고도 내 취향을 골라내는 감별사. 필요한 주말만 콕 집어 챙기는 똑똑한 취향 저격파예요." },
+  afterglow: { name:"주말 여운파",   img:"tori-gamsang.png", tag:"월요일의 낭만러", desc:"주말이 끝나도 여운을 오래 붙잡는 당신. 월요일에 조용히 편지를 펼치며 지난 주말을 곱씹는 여운파예요." },
+  silent:    { name:"침묵의 애독자", img:"tori-read.png",    tag:"조용한 찐팬", desc:"티 내지 않아도 늘 곁에 있는 사람. 소리 없이 꾸준히 함께해 온, 주말토리가 가장 든든해하는 침묵의 애독자예요." }
+};
+const CAT_KEYS = ["여행","맛집","휴식","문화","배움"];
+const CAT_INFO = {
+  여행:{emo:"✈️",label:"주말 여행·나들이"}, 맛집:{emo:"☕",label:"맛집·카페 탐방"}, 휴식:{emo:"🏡",label:"집콕·휴식·취미"},
+  문화:{emo:"🎨",label:"문화·전시·공연"}, 배움:{emo:"📚",label:"배움·자기계발"}
+};
+const MISSED = [
+  { emo:"🍑", t:"드디어 복숭아 시즌이숭 · 복숭아 빙수 성지 6", cat:"맛집", url:"https://joomaltory.com/feed/cmrbvu6710008ggx7hrxj0827" },
+  { emo:"📚", t:"장마철에도 뽀송뽀송 · 전국 이색 도서관", cat:"배움", url:"https://joomaltory.com/feed/cmrd4vj4i000510logxx18h54" },
+  { emo:"🍶", t:"아이보리 매직 · 서울 이색 막걸리 맛집 4", cat:"맛집", url:"https://joomaltory.com/feed/cmqrv5vxl0002fysa2ggv6tar" }
+];
+const BADGES = {
+  founder:{emo:"👑",name:"창단 멤버",cond:"5~6년 · 극초기 구독",desc:"주말토리의 시작을 함께한 최상위 명예 멤버. 이 배지는 아무나 가질 수 없어요."},
+  keeper:{emo:"🏡",name:"터줏대감",cond:"3~5년 · 오픈율 60%+",desc:"오랜 시간 자리를 지켜온 핵심 팬. 주말토리의 든든한 기둥이에요."},
+  regular:{emo:"☕",name:"주말 단골",cond:"1~3년 함께",desc:"어느새 익숙해진 주말의 단골. 안정적인 애착으로 함께하고 있어요."},
+  sprout:{emo:"🌱",name:"새싹 구독자",cond:"~1년 · 반가운 새 친구",desc:"이제 막 함께하기 시작한 반가운 새싹. 앞으로의 주말이 더 기대돼요!"}
+};
+function decideBadge(years, openRate){ if(years>=5) return "founder"; if(years>=3 && openRate>=60) return "keeper"; if(years>=1) return "regular"; return "sprout"; }
+
+function buildData(){
+  const seed=hashStr(state.email.toLowerCase());
+  const rng=mulberry32(seed);
+  const y=seed%100;
+  let years = y<12?6 : y<25?5 : y<44?4 : y<64?3 : y<83?2 : y<95?1 : 0;
+  const FOUND_YEAR=2020;
+  let startYear=2026-years; if(years>=6) startYear=2020;
+  let startMonth=Math.floor(rng()*12), startDay=1+Math.floor(rng()*27);
+  if(startYear===FOUND_YEAR && startMonth<6){ startMonth=6+Math.floor(rng()*6); }
+  if(startYear===2026 && startMonth>5){ startMonth=Math.floor(rng()*6); }
+  let start=new Date(startYear,startMonth,startDay);
+  if(start>TODAY) start=new Date(2026,0,12);
+  const days=Math.max(14, Math.floor((TODAY-start)/86400000));
+  const received=Math.max(4, Math.round(days/7));
+  const openRate=58+Math.floor(rng()*36);
+  const opened=Math.round(received*openRate/100);
+  let pct=Math.round((96-openRate)*0.42)+2+Math.floor(rng()*3); pct=Math.min(48,Math.max(1,pct));
+  const badge=decideBadge(years,openRate);
+  const isDiligent=openRate>=88;
+  const typeKeys=["alarm","taste","afterglow","silent"];
+  const type=typeKeys[Math.floor(rng()*4)];
+  const cat=CAT_KEYS[Math.floor(rng()*5)];
+  let missed=MISSED.filter(m=>m.cat===cat); if(missed.length===0) missed=MISSED;
+  const miss=missed[Math.floor(rng()*missed.length)];
+
+  const weeks=Math.floor(days/7);
+  const coinSub=weeks*COIN_PER_WEEK;
+  const coinOpen=opened*COIN_PER_OPEN;
+  const coinBonus=(BADGE_BONUS[badge]||0)+(isDiligent?DILIGENT_BONUS:0);
+  const coinTotal=coinSub+coinOpen+coinBonus;
+
+  state.data={ years, days, received, opened, openRate, pct, badge, isDiligent, type, cat, miss, start,
+               coinTotal, coinSub, coinOpen, coinBonus };
+}
+
+/* =========================================================
+   이벤트 응모 (코인 차감 · 이메일별 localStorage)
+   ========================================================= */
+function ekey(){ return "jmt6_entries_v1_"+(state.email||"").toLowerCase(); }
+function loadEntries(){ try{ return JSON.parse(localStorage.getItem(ekey()))||{}; }catch(e){ return {}; } }
+function saveEntries(e){ try{ localStorage.setItem(ekey(),JSON.stringify(e)); }catch(e){} }
+function spentCoins(e){ return PRIZES.reduce((s,p)=>s+(e[p.id]||0)*p.cost,0); }
+function coinBalance(){ return (state.data?state.data.coinTotal:0) - spentCoins(loadEntries()); }
+function renderPrizes(){
+  const e=loadEntries(), bal=coinBalance();
+  $$(".coinBalVal").forEach(el=> el.textContent=bal.toLocaleString("ko-KR"));
+  const html = PRIZES.map(p=>{
+    const cnt=e[p.id]||0, can=bal>=p.cost;
+    const media = p.img
+      ? `<div class="prize-media t-${p.tone}" data-emo="${p.emo}"><img src="${p.img}" alt="" onerror="this.parentElement.classList.add('noimg'); this.style.display='none';" /></div>`
+      : `<div class="prize-media t-${p.tone}">${p.emo}</div>`;
+    return `<div class="prize-card">${media}
+      <div class="prize-info"><div class="pname">${p.name}</div><div class="pval">${p.value}</div><div class="pcost">응모 1회 · <b>${p.cost.toLocaleString("ko-KR")} 🪙</b></div></div>
+      <div class="prize-right">${cnt?`<div class="pentries">응모 ${cnt}회</div>`:``}<button class="pbtn" ${can?"":"disabled"} onclick="enterPrize('${p.id}')">${can?"응모":"코인 부족"}</button></div>
+    </div>`;
+  }).join("");
+  $$(".prizeList").forEach(list=> list.innerHTML=html);
+}
+function enterPrize(id){
+  const p=PRIZES.find(x=>x.id===id); if(!p) return;
+  if(coinBalance()<p.cost){ toast("코인이 부족해요 🪙"); return; }
+  const e=loadEntries(); e[id]=(e[id]||0)+1; saveEntries(e); renderPrizes();
+  toast(`${p.name} 응모 완료! (누적 ${e[id]}회) 🎉`);
+}
+function resetEntries(){ saveEntries({}); renderPrizes(); toast("응모 내역을 초기화했어요"); }
+
+/* =========================================================
+   로딩 → 결산 스토리
+   ========================================================= */
+function runLoading(){
+  const lines=["구독 기록을 불러오는 중…","받은 편지를 세는 중…","오픈율을 계산하는 중…","열람 패턴을 분석하는 중…","주말 코인을 정산하는 중…"];
+  let i=0; const el=$("#loadLine"); el.textContent=lines[0];
+  const iv=setInterval(()=>{ i++; if(i<lines.length) el.textContent=lines[i]; },560);
+  setTimeout(()=>{ clearInterval(iv); buildStory(); go('story'); showSlide(0); }, 2900);
+}
+
+function countUp(el, target, dur=1200, suffix=""){
+  const start=performance.now();
+  function tick(now){ const p=Math.min(1,(now-start)/dur); const eased=1-Math.pow(1-p,3);
+    el.textContent=Math.round(target*eased).toLocaleString("ko-KR")+suffix; if(p<1) requestAnimationFrame(tick); }
+  requestAnimationFrame(tick);
+}
+
+/* ── 스토리 슬라이드 ── */
+let STORY=[], storyIdx=0;
+function buildStory(){
+  const d=state.data, t=TYPE_INFO[d.type], c=CAT_INFO[d.cat], b=BADGES[d.badge], nick=escapeHtml(state.nick);
+  STORY = [
+    { render:()=>`<div class="s-kicker">🧬 나의 구독 유형</div>
+      <img class="s-char tori" src="${t.img}" alt="${t.name}" />
+      <div class="tier-pill">${b.emo} ${b.name}</div>
+      <div class="s-big-word" style="margin-top:10px;color:var(--coral);">${t.name}</div>
+      <div class="s-tag">${t.tag}</div>
+      <div class="s-cap">${t.desc}</div>` },
+    { render:()=>`<div class="s-kicker">🗓️ 우리가 함께한 시간</div>
+      <div class="s-huge c"><span data-count="${d.days}">0</span><span class="u">일</span></div>
+      <div class="s-cap"><b>${nick}</b>님은 ${d.start.getFullYear()}년부터<br/>매주 주말, 한 번도 빠짐없이 곁에 있었어요.</div>` },
+    { render:()=>`<div class="s-kicker">💌 주고받은 편지</div>
+      <div class="s-two">
+        <div><div class="s-mid"><span data-count="${d.received}">0</span>통</div><div class="s-sub">받은 편지</div></div>
+        <div><div class="s-mid c"><span data-count="${d.opened}">0</span>통</div><div class="s-sub">열어본 편지</div></div>
+      </div>
+      <div class="s-cap">지난 1년, 이만큼 주말을 함께했어요.</div>` },
+    { render:()=>`<div class="s-kicker">📈 나의 오픈율</div>
+      <div class="s-huge c"><span data-count="${d.openRate}" data-suffix="%">0</span></div>
+      <div class="s-gauge"><i data-gauge="${d.openRate}"></i></div>
+      <div style="margin-top:16px;"><span class="pct-chip">🏅 전체 구독자 상위 ${d.pct}%</span></div>
+      <div class="s-cap">받은 편지 ${d.received}통 중 <b>${d.opened}통</b>, 이 정도면 진심이죠.</div>` },
+    { render:()=>`<div class="s-kicker">❤️ 가장 사랑한 주제</div>
+      <div class="s-emo">${c.emo}</div>
+      <div class="s-big-word">${c.label}</div>
+      <div class="s-cap">${nick}님의 주말은 이걸로 가득 채워졌어요.</div>` },
+    { render:()=>`<div class="s-kicker">🔖 아직 안 열어본 편지</div>
+      <a class="s-miss" href="${d.miss.url}" target="_blank" rel="noopener">
+        <div class="miss-emo">${d.miss.emo}</div>
+        <div class="miss-t">${d.miss.t}<small>지금 읽으러 가기 →</small></div>
+      </a>
+      <div class="s-cap">이 명작, 놓치기 아까워요.</div>` },
+
+    /* ── 액션 ① 코인 & 응모 ── */
+    { action:true, hint:"원하는 선물에 응모하고 다음으로 →", render:()=>`
+      <div class="s-kicker">🪙 나의 주말 코인</div>
+      <div class="s-coin-hero"><span data-count="${d.coinTotal}" data-suffix=" 🪙">0</span></div>
+      <div class="coin-break" style="margin-top:14px;">
+        <span>⏳ 구독 ${d.coinSub.toLocaleString("ko-KR")}</span>
+        <span>📬 열람 ${d.coinOpen.toLocaleString("ko-KR")}</span>
+        <span>🎖️ 보너스 ${d.coinBonus.toLocaleString("ko-KR")}</span>
+      </div>
+      <div class="s-actionhead">🎁 이 코인으로 응모하세요</div>
+      <div class="coin-balance">응모 가능 코인 <b class="coinBalVal">0</b> 🪙</div>
+      <div class="prize-list prizeList"></div>
+      <div class="event-foot"><button class="reset-link" onclick="resetEntries()">응모 내역 초기화</button></div>` },
+
+    /* ── 액션 ② NFC 키링 구매 ── */
+    { action:true, hint:"넘기면 롤링페이퍼로 마무리 →", render:()=>`
+      <div class="s-kicker">🎁 6주년 기념 선물</div>
+      <div class="goods-card" style="text-align:left; margin-top:6px;">
+        <div class="goods-badge">🔑 6주년 한정 굿즈</div>
+        <div class="goods-top">
+          <div class="goods-photo">
+            <img src="nfc-keyring.png" alt="주말토리 NFC 키링" onerror="this.parentElement.classList.add('noimg'); this.style.display='none';" />
+            <div class="ph-tag">실제 제품 컷</div>
+          </div>
+          <div class="goods-info">
+            <h3>주말토리<br/>NFC 키링</h3>
+            <p class="g-sub">폰에 톡 태그하면<br/><b>“이번 주말 뭐하지?”</b>가<br/>바로 시작돼요.</p>
+          </div>
+        </div>
+        <div class="g-meta"><span>🎁 6주년 기념가</span><span>⏳ 한정 수량</span><span>🚀 NFC 태깅</span></div>
+        <button class="g-btn" onclick="buyGoods()">6주년 키링 구매하러 가기 →</button>
+      </div>
+      <div class="s-cap">6주년을 기념해 딱 한정 수량으로만 만나볼 수 있어요.</div>` },
+
+    /* ── 액션 ③ 롤링페이퍼 (마지막 · 모두의 마음이 쫙) ── */
+    { action:true, render:()=>`
+      <div class="s-kicker">🖊️ 6주년 롤링페이퍼</div>
+      <div class="s-big-word" style="font-size:24px;">우리가 함께 쓴 <span style="color:var(--coral)">6주년</span></div>
+      <p class="s-cap" style="margin-top:10px;">한 마디 남기면, 모두의 마음이 여기 모여요.<br/>다음 편지에서 소개될지도!</p>
+      <div class="guest-form" style="margin-top:16px; text-align:left;">
+        <textarea maxlength="140" placeholder="주말토리와의 6년, 한 문장으로 남겨볼까요?"></textarea>
+        <div class="row">
+          <input type="text" maxlength="12" placeholder="닉네임" />
+          <button onclick="postNote(this)">남기기</button>
+        </div>
+      </div>
+      <div class="guest-count">지금까지 <b class="gCountVal">0</b>개의 마음이 모였어요</div>
+      <div class="wall wallList" style="margin-top:12px; text-align:left;"></div>` }
+  ];
+  $("#storyBar").innerHTML = STORY.map(()=>'<i></i>').join('');
+}
+function showSlide(i){
+  storyIdx=i;
+  const slide=STORY[i];
+  const wrap=$("#slideWrap");
+  wrap.classList.toggle("wrap-top", !!slide.action);
+  wrap.innerHTML=`<div class="slide-inner anim">${slide.render()}</div>`;
+  $$("#storyBar i").forEach((seg,idx)=> seg.classList.toggle("on", idx<=i));
+  $("#storyBack").classList.toggle("show", i>0);
+  const last = i===STORY.length-1;
+  $("#storyNext").textContent = last ? "결산 마치기 →" : "다음 →";
+  const hintEl=$(".story-hint");
+  const hint = last ? "" : (slide.hint!==undefined ? slide.hint : "톡 넘기며 내 6주년을 확인해 보세요");
+  hintEl.textContent = hint; hintEl.style.visibility = hint ? "visible" : "hidden";
+  const inner=$(".slide-inner",wrap);
+  $$("[data-count]",inner).forEach(el=> countUp(el, +el.dataset.count, 1100, el.dataset.suffix||""));
+  const g=$("[data-gauge]",inner); if(g) setTimeout(()=> g.style.width=g.dataset.gauge+"%",160);
+  renderPrizes(); renderWall();
+  wrap.scrollTop=0;
+}
+function nextSlide(){ if(storyIdx>=STORY.length-1){ gotoHome(); } else showSlide(storyIdx+1); }
+function prevSlide(){ if(storyIdx>0) showSlide(storyIdx-1); }
+function skipStory(){ gotoHome(); }
+function replayStory(){ go('story'); showSlide(0); }
+
+/* =========================================================
+   결과 홈 (대시보드)
+   ========================================================= */
+function gotoHome(){ renderHome(); go('home'); }
+function renderHome(){
+  const d=state.data, t=TYPE_INFO[d.type], b=BADGES[d.badge], nick=escapeHtml(state.nick);
+  $("#recapCard").innerHTML = `
+    <img class="tori" src="${t.img}" alt="${t.name}" />
+    <div class="r-name"><b>${nick}</b>님의 6주년 결산</div>
+    <div class="r-chips"><span class="tier-pill">${b.emo} ${b.name}</span><span class="r-type">${t.name}</span></div>
+    <div class="r-coin">🪙 <b>${d.coinTotal.toLocaleString("ko-KR")}</b> 주말 코인</div>
+    <button class="replay-btn" onclick="replayStory()">↺ 결산 스토리 다시 보기</button>
+  `;
+  renderPrizes(); renderWall(); drawShareCard();
+}
+
+/* =========================================================
+   공유 카드 (Canvas · 이미지 없이 그려 export 안전)
+   ========================================================= */
+function roundRect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function drawTori(ctx,cx,cy,s,color){
+  ctx.save(); ctx.translate(cx,cy); ctx.fillStyle=color;
+  ctx.beginPath(); ctx.arc(-42*s,-58*s,26*s,0,7); ctx.fill();
+  ctx.beginPath(); ctx.arc(42*s,-58*s,26*s,0,7); ctx.fill();
+  roundRect(ctx,-66*s,-56*s,132*s,120*s,58*s); ctx.fill();
+  roundRect(ctx,-72*s,-6*s,144*s,74*s,46*s); ctx.fill();
+  ctx.strokeStyle="#1E1A12"; ctx.lineWidth=7*s; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(-10*s,-66*s); ctx.quadraticCurveTo(-6*s,-78*s,-2*s,-66*s); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(4*s,-66*s); ctx.quadraticCurveTo(9*s,-79*s,13*s,-66*s); ctx.stroke();
+  ctx.fillStyle="#1E1A12"; ctx.beginPath(); ctx.arc(-20*s,-16*s,6.5*s,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(20*s,-16*s,6.5*s,0,7); ctx.fill();
+  ctx.fillStyle="#C6F542"; ctx.beginPath(); ctx.arc(0,-2*s,5*s,0,7); ctx.fill();
+  ctx.strokeStyle="#1E1A12"; ctx.lineWidth=7*s; ctx.beginPath(); ctx.moveTo(-22*s,10*s); ctx.quadraticCurveTo(-10*s,22*s,0,12*s); ctx.quadraticCurveTo(10*s,22*s,22*s,10*s); ctx.stroke();
+  ctx.restore();
+}
+function FONT(){ return `"Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", sans-serif`; }
+function drawShareCard(){
+  const d=state.data; if(!d) return;
+  const cv=$("#shareCanvas"); const ctx=cv.getContext("2d"); const W=cv.width,H=cv.height;
+  const b=BADGES[d.badge], t=TYPE_INFO[d.type], c=CAT_INFO[d.cat];
+  const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,"#FFDA3E"); g.addColorStop(.5,"#FFC400"); g.addColorStop(1,"#FF7A5C");
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  ctx.textAlign="center"; ctx.fillStyle="#1E1A12"; ctx.font="800 25px "+FONT(); ctx.fillText("주말토리 6주년 결산", W/2, 66);
+  ctx.font="700 15px "+FONT(); ctx.fillStyle="rgba(30,26,18,.6)"; ctx.fillText("6년, 우리가 함께 보낸 주말", W/2, 92);
+  const cardX=34, cardY=120, cardW=W-68, cardH=H-260;
+  ctx.save(); ctx.shadowColor="rgba(30,26,18,.22)"; ctx.shadowBlur=30; ctx.shadowOffsetY=12; ctx.fillStyle="#FFFDF7"; roundRect(ctx,cardX,cardY,cardW,cardH,40); ctx.fill(); ctx.restore();
+  drawTori(ctx, W/2, cardY+120, 1.15, "#FF6446");
+  ctx.font="72px "+FONT(); ctx.fillText(b.emo, W/2+92, cardY+120);
+  ctx.fillStyle="#1E1A12"; ctx.font="800 34px "+FONT(); ctx.fillText(`${state.nick}님은`, W/2, cardY+232);
+  ctx.fillStyle="#FF6446"; ctx.font="800 40px "+FONT(); ctx.fillText(`${b.name} ${b.emo}`, W/2, cardY+282);
+  ctx.fillStyle="#8A8172"; ctx.font="700 20px "+FONT(); ctx.fillText(`“${t.name}” · ${c.label}`, W/2, cardY+320);
+  ctx.strokeStyle="#F0E7D6"; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cardX+50, cardY+360); ctx.lineTo(cardX+cardW-50, cardY+360); ctx.stroke();
+  const stats=[{n:d.days.toLocaleString("ko-KR"),l:"함께한 날"},{n:d.openRate+"%",l:"오픈율"},{n:"상위 "+d.pct+"%",l:"전체 구독자 중"}];
+  const colW=cardW/3;
+  stats.forEach((st,i)=>{ const cxp=cardX+colW*i+colW/2; ctx.fillStyle="#1E1A12"; ctx.font="800 30px "+FONT(); ctx.fillText(st.n,cxp,cardY+418); ctx.fillStyle="#8A8172"; ctx.font="700 15px "+FONT(); ctx.fillText(st.l,cxp,cardY+446); });
+  const cy2=cardY+cardH-96;
+  ctx.fillStyle="#FFF1BF"; roundRect(ctx,cardX+30,cy2,cardW-60,72,22); ctx.fill();
+  ctx.fillStyle="#8A6A00"; ctx.font="800 18px "+FONT(); ctx.fillText("당신의 주말은 어떤가요?", W/2, cy2+30);
+  ctx.fillStyle="#F04E30"; ctx.font="800 20px "+FONT(); ctx.fillText("주말토리 구독하기 →", W/2, cy2+56);
+  ctx.fillStyle="#1E1A12"; ctx.font="800 19px "+FONT(); ctx.fillText("joomaltory.com", W/2, H-58);
+  ctx.fillStyle="rgba(30,26,18,.6)"; ctx.font="700 15px "+FONT(); ctx.fillText(IG_HANDLE+" 를 태그하고 굿즈 받기 🎁", W/2, H-32);
+}
+function downloadCard(){
+  const cv=$("#shareCanvas");
+  try{ const url=cv.toDataURL("image/png"); const a=document.createElement("a"); a.href=url; a.download=`주말토리_6주년_${state.nick||"결산"}.png`; document.body.appendChild(a); a.click(); a.remove(); toast("카드를 저장했어요! 스토리에 올려주세요 🎉"); }
+  catch(e){ toast("저장에 실패했어요. 스크린샷으로 저장해 주세요 📸"); }
+}
+function copyLink(){
+  const text=`주말토리 6주년 결산 리포트 🎉 나의 주말 취향 확인하기 → ${SUBSCRIBE_URL}`;
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(()=>toast("구독 링크를 복사했어요 🔗")).catch(()=>toast(SUBSCRIBE_URL)); }
+  else { toast(SUBSCRIBE_URL); }
+}
+function buyGoods(){ window.open(GOODS_URL,"_blank","noopener"); }
+
+/* =========================================================
+   롤링페이퍼 (localStorage)
+   ========================================================= */
+const GKEY="jmt6_guestbook_v1";
+const SEED_NOTES=[
+  {name:"토리사랑",msg:"매주 주말이 기다려지는 이유. 6년 동안 고마웠어요, 앞으로도 함께해요 🥹"},
+  {name:"주말지기",msg:"바쁜 일상에 주말토리 편지 한 통이 작은 쉼표였어요. 6주년 축하해요!"},
+  {name:"뽀시래기",msg:"덕분에 안 가본 곳, 안 먹어본 거 잔뜩 도전했어요. 다음 6년도 부탁해요 ✨"}
+];
+function loadNotes(){ try{ const raw=localStorage.getItem(GKEY); if(raw) return JSON.parse(raw); }catch(e){} return SEED_NOTES.slice(); }
+function saveNotes(list){ try{ localStorage.setItem(GKEY,JSON.stringify(list)); }catch(e){} }
+function renderWall(){
+  const list=loadNotes();
+  $$(".gCountVal").forEach(el=> el.textContent=list.length.toLocaleString("ko-KR"));
+  const html=list.map(n=>`<div class="note"><div class="msg">${escapeHtml(n.msg)}</div><div class="who"><span class="tag">🖊️</span>${escapeHtml(n.name||"익명의 구독자")}</div></div>`).join("");
+  $$(".wallList").forEach(w=> w.innerHTML=html);
+}
+function postNote(btn){
+  const form = btn ? btn.closest(".guest-form") : null;
+  const ta = form ? form.querySelector("textarea") : null;
+  const ni = form ? form.querySelector("input") : null;
+  const msg = (ta ? ta.value : "").trim();
+  const name = (ni ? ni.value : "").trim() || state.nick || "익명의 구독자";
+  if(!msg){ toast("한 마디 남겨주세요 🙂"); if(ta) ta.focus(); return; }
+  const list=loadNotes(); list.unshift({name,msg}); saveNotes(list);
+  if(ta) ta.value=""; if(ni) ni.value="";
+  renderWall();
+  toast("소중한 한 마디 감사해요 💌");
+}
+
+/* 초기화 */
+renderWall();
+</script>
+</body>
+</html>
