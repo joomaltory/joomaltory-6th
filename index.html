@@ -104,11 +104,11 @@
      화면 1 — 인트로
      ========================================================= */
   #intro { justify-content: center; align-items: center; text-align: center; }
-  #intro .hero { width: 258px; margin-bottom: 20px; }
+  #intro .hero { width: 258px; margin-bottom: 20px; filter: none; }
   #intro .six { font-size: 82px; font-weight: 800; line-height: .9; letter-spacing: -3px; color: var(--coral); text-shadow: 0 6px 0 #fff, 0 8px 14px rgba(240,78,48,.25); margin: 2px 0 4px; }
   #intro .six small { font-size: 26px; letter-spacing: -1px; }
   #intro h1 { font-size: 27px; font-weight: 800; letter-spacing: -1.1px; line-height:1.3; margin-top: 6px; }
-  #intro h1 b { color: var(--coral); }
+  #intro h1 b { color: var(--ink); }
   #intro .sub { font-size: 14.5px; color: var(--ink-soft); margin-top: 11px; margin-bottom: 26px; line-height: 1.6; font-weight:600; }
   #intro .btn-primary { max-width: 340px; }
   #intro .disclaimer { font-size: 11.5px; color: #B9AE99; margin-top: 14px; font-weight: 600; line-height:1.5; max-width: 320px; }
@@ -157,6 +157,15 @@
   .slide-wrap.wrap-top { align-items:flex-start; padding-top: 14px; }
   .s-coin-hero { font-size:54px; font-weight:800; letter-spacing:-2px; color:#E39A00; line-height:1; }
   .s-actionhead { font-size:15.5px; font-weight:800; color:var(--ink); margin-top:26px; margin-bottom:2px; }
+  /* 도토리 적립 UI */
+  .acorn-pill { display:inline-block; background:#FFF1BF; color:#8A6A00; font-weight:800; font-size:13px; padding:7px 15px; border-radius:100px; }
+  .acorn-pill b { color:#E39A00; }
+  .acorn-breakdown { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+  .acorn-breakdown span { background:rgba(255,255,255,.6); color:#6B4A0A; font-size:12px; font-weight:800; padding:6px 12px; border-radius:100px; }
+  .acorn-breakdown span.off { opacity:.4; }
+  .certify-q { font-size:13.5px; font-weight:700; color:var(--ink-soft); margin-top:16px; margin-bottom:10px; }
+  .certify-btn { max-width:none; }
+  .certify-done { margin-top:16px; background:#E3F6E1; color:#2E7D32; font-weight:800; font-size:14px; padding:14px; border-radius:16px; }
   .slide-inner { text-align:center; width:100%; max-width:360px; }
   .slide-inner.anim { animation: slideIn .55s cubic-bezier(.2,.8,.3,1); }
   @keyframes slideIn { from{opacity:0; transform:translateY(26px) scale(.96)} to{opacity:1; transform:none} }
@@ -203,23 +212,46 @@
   .coin-balance { text-align:center; font-size:14px; font-weight:800; color:var(--ink-soft); margin: 12px 0 2px; }
   .coin-balance b { color: var(--coral); font-size:19px; }
   .prize-list { display:flex; flex-direction:column; gap:12px; margin-top:12px; }
-  .prize-card { display:flex; align-items:center; gap:13px; background:var(--paper); border-radius:20px; padding:14px; box-shadow:var(--shadow-sm); border:2.5px solid #F3EAD8; }
-  .prize-media { width:60px; height:60px; border-radius:16px; flex-shrink:0; display:grid; place-items:center; font-size:30px; overflow:hidden; position:relative; }
-  .prize-media img { width:100%; height:100%; object-fit:cover; }
-  .prize-media.noimg::after { content: attr(data-emo); font-size:28px; }
+  .prize-card { display:flex; align-items:center; gap:14px; background:var(--paper); border-radius:20px; padding:15px 16px; box-shadow:var(--shadow-sm); text-align:left; }
+  .prize-media { width:56px; height:56px; border-radius:15px; flex-shrink:0; display:grid; place-items:center; font-size:28px; overflow:hidden; }
+  .prize-media img { width:100%; height:100%; object-fit:cover; display:block; }
+  .prize-media.noimg::after { content:attr(data-emo); font-size:28px; }
   .prize-media.t-green { background:#E3F6E1; } .prize-media.t-coral { background:#FFE1DA; } .prize-media.t-pink { background:#FDE4F3; }
   .prize-info { flex:1; min-width:0; }
-  .prize-info .pname { font-size:15px; font-weight:800; letter-spacing:-.3px; }
-  .prize-info .pval { font-size:12px; color:var(--ink-soft); font-weight:700; margin-top:3px; }
-  .prize-info .pcost { font-size:12.5px; color:#B98A00; font-weight:800; margin-top:6px; }
-  .prize-right { text-align:center; flex-shrink:0; }
-  .prize-right .pentries { font-size:11px; font-weight:800; color:var(--coral); margin-bottom:6px; }
+  .prize-info .pname { font-size:15px; font-weight:800; letter-spacing:-.3px; word-break:keep-all; line-height:1.25; }
+  .prize-info .pmeta { font-size:11px; color:#B0A794; font-weight:600; margin-top:5px; word-break:keep-all; }
+  .prize-right { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .prize-right .pentries { font-size:11px; font-weight:800; color:var(--coral); }
+  .prize-right .pcost-cap { font-size:11px; font-weight:800; color:#B98A00; }
   .pbtn { background:var(--coral); color:#fff; font-weight:800; font-size:14px; padding:11px 15px; border-radius:13px; box-shadow:0 4px 0 var(--coral-deep); transition: transform .1s, box-shadow .1s; white-space:nowrap; }
   .pbtn:active { transform:translateY(3px); box-shadow:0 1px 0 var(--coral-deep); }
   .pbtn:disabled { background:#E6DAC6; box-shadow:0 4px 0 #D3C4AA; color:#fff; }
   .event-foot { margin-top:14px; text-align:center; }
   .reset-link { font-size:12px; font-weight:700; color:#B9AE99; text-decoration:underline; }
   .event-hint { font-size:11px; color:#B9AE99; font-weight:600; margin-top:8px; line-height:1.5; }
+
+  /* 축하하기 = 참여형 타일 (선물 카드와 다른 컬러 타일 · 셀렉트박스 느낌 제거) */
+  .mission-lead { text-align:center; font-size:13px; font-weight:700; color:var(--ink-soft); margin-top:8px; }
+  .odds-note { text-align:center; font-size:12px; font-weight:800; color:var(--coral); margin-top:8px; }
+  .mission-board { display:flex; flex-direction:column; gap:11px; margin-top:14px; }
+  .m-tile { display:flex; align-items:center; gap:13px; border-radius:18px; padding:14px 15px; text-align:left; }
+  .m-tile.t-green { background:#EDF8EA; } .m-tile.t-coral { background:#FFF0EB; } .m-tile.t-pink { background:#FDEFF7; }
+  .m-tile.done { background:#EEF7EC; }
+  .mt-badge { width:46px; height:46px; border-radius:50%; background:#fff; display:grid; place-items:center; font-size:22px; font-weight:900; flex-shrink:0; box-shadow:0 2px 7px rgba(30,26,18,.08); }
+  .m-tile.done .mt-badge { background:#39B54A; color:#fff; }
+  .mt-body { flex:1; min-width:0; }
+  .mt-title { font-size:14.5px; font-weight:800; letter-spacing:-.3px; word-break:keep-all; }
+  .mt-sub { font-size:11.5px; color:var(--ink-soft); font-weight:700; margin-top:2px; }
+  .mt-reward { font-size:12px; font-weight:800; color:#B98A00; margin-top:5px; }
+  .mt-right { flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .mt-btn { background:var(--coral); color:#fff; font-weight:800; font-size:13px; padding:10px 15px; border-radius:12px; box-shadow:0 3px 0 var(--coral-deep); white-space:nowrap; }
+  .mt-btn:active { transform:translateY(2px); box-shadow:0 1px 0 var(--coral-deep); }
+  .mt-done { font-size:13px; font-weight:800; color:#2E7D32; white-space:nowrap; }
+  .cert-thumb { width:46px; height:46px; border-radius:9px; object-fit:cover; border:2px solid #fff; box-shadow:0 2px 7px rgba(30,26,18,.15); }
+  /* 도토리 소진 안내 (마지막 페이지) */
+  .earn-more { background:#FFF3EF; border:2px dashed #FFC1B0; border-radius:18px; padding:18px; text-align:center; font-size:13.5px; font-weight:700; color:var(--ink-soft); line-height:1.6; margin-top:14px; }
+  .earn-more b { color:var(--coral); }
+  .earn-more .btn-primary { max-width:280px; margin:14px auto 0; }
 
   /* 액션 카드 (자랑카드) */
   .action-card { display:flex; align-items:center; gap:14px; width:100%; background:var(--paper); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow-sm); border:2.5px solid transparent; text-align:left; margin-top:12px; transition:transform .12s, border-color .2s; }
@@ -294,6 +326,23 @@
   .toast { position: fixed; left: 50%; bottom: 34px; transform: translateX(-50%) translateY(20px); background: var(--ink); color:#fff; font-size: 13.5px; font-weight: 700; padding: 12px 20px; border-radius: 100px; box-shadow: var(--shadow); opacity: 0; pointer-events:none; transition: opacity .3s, transform .3s; z-index: 50; white-space: nowrap; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+  /* 키링 인증 레이어 팝업 */
+  .modal-overlay { position:fixed; inset:0; z-index:100; display:none; align-items:center; justify-content:center; padding:26px; background:rgba(30,26,18,.55); }
+  .modal-overlay.show { display:flex; animation:mfade .2s ease; }
+  @keyframes mfade { from{opacity:0} to{opacity:1} }
+  .modal { position:relative; width:100%; max-width:340px; background:var(--paper); border-radius:24px; padding:28px 22px 22px; text-align:center; box-shadow:var(--shadow); animation:mpop .28s cubic-bezier(.2,.8,.3,1); }
+  @keyframes mpop { from{opacity:0; transform:translateY(16px) scale(.96)} to{opacity:1; transform:none} }
+  .modal-x { position:absolute; top:14px; right:16px; font-size:16px; font-weight:800; color:#C4B79E; width:28px; height:28px; }
+  .modal-emo { font-size:46px; line-height:1; }
+  .modal h3 { font-size:21px; font-weight:800; letter-spacing:-.5px; margin-top:10px; }
+  .modal p { font-size:13.5px; color:var(--ink-soft); font-weight:600; line-height:1.6; margin-top:12px; margin-bottom:20px; }
+  .modal p b { color:var(--ink); }
+  .modal-btn { display:block; width:100%; padding:15px; border-radius:15px; font-weight:800; font-size:15px; margin-top:10px; transition:transform .1s; }
+  .modal-btn:active { transform:scale(.98); }
+  .modal-btn.primary { background:var(--coral); color:#fff; box-shadow:0 5px 0 var(--coral-deep); }
+  .modal-btn.ghost { background:#FFF1BF; color:#8A6A00; }
+  .modal-note { font-size:11.5px; color:#B9AE99; font-weight:600; margin:14px 0 0; }
+
   @media (max-height: 720px) {
     #intro .hero { width: 200px; } #intro .six { font-size: 66px; }
     .s-char { width: 140px; } .s-huge { font-size: 60px; } .s-emo { font-size: 70px; }
@@ -313,26 +362,23 @@
   <!-- ============ 화면 1 · 인트로 ============ -->
   <section class="screen active" id="intro">
     <img class="hero tori" src="welcome-hero.png" alt="주말토리 친구들" />
-    <div class="badge">🎉 주말토리 6주년 결산</div>
     <div class="six">6<small>주년</small></div>
     <h1>6년, 우리가 함께 보낸 <b>주말</b></h1>
-    <p class="sub">매주 주말마다 쌓인<br/><b style="color:var(--ink)">나와 주말토리의 기록</b>을 한 장으로.<br/>나는 어떤 구독자였을까요?</p>
-    <button class="btn-primary" onclick="go('enter')">내 6주년 리포트 열어보기 →</button>
-    <p class="disclaimer">* 체험판 미리보기입니다. 실제 리포트는 구독 데이터를 기반으로 이메일로 발송돼요.</p>
+    <p class="sub">나는 어떤 구독자였을까요?<br/>한 장으로 보는 나의 주말 기록</p>
+    <button class="btn-primary" onclick="go('enter')">내 리포트 확인하기 →</button>
   </section>
 
   <!-- ============ 화면 2 · 이메일 조회 ============ -->
   <section class="screen" id="enter">
     <div class="enter-inner">
       <div class="emo-badge">📮</div>
-      <h2>구독하신 <b>이메일</b>로<br/>내 6주년 결산을 불러올게요</h2>
-      <p class="lead">주말토리를 받아보는 이메일 주소를 입력하면,<br/>그동안의 기록을 한 장으로 정리해 드려요.</p>
+      <h2>구독하신 <b>이메일</b>을<br/>알려주세요</h2>
+      <p class="lead">주말토리 구독 이메일 주소를 입력하면,<br/>그동안의 기록을 정리해 드려요.</p>
       <div class="field">
         <label>이메일 주소</label>
         <input id="inEmail" type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" />
       </div>
-      <button class="btn-primary" id="btnLookup" onclick="lookup()">내 결산 리포트 불러오기 🔍</button>
-      <p class="privacy">🔒 입력한 이메일은 결산 조회에만 사용되며 별도로 저장되지 않아요.<br/>(체험판: 실제 서비스는 스티비 구독 데이터를 조회합니다.)</p>
+      <button class="btn-primary" id="btnLookup" onclick="lookup()">내 기록 불러오기 🔍</button>
     </div>
   </section>
 
@@ -363,23 +409,18 @@
     <div class="home-head"><div class="kicker">🎉 주말토리 6주년 결산</div></div>
     <div class="recap-card" id="recapCard"></div>
 
-    <div class="section-divider"><span class="line"></span><span class="dtxt">🎁 코인으로 응모하는 이벤트</span><span class="line"></span></div>
-    <div class="coin-balance">응모 가능 코인 <b class="coinBalVal">0</b> 🪙</div>
+    <div class="section-divider"><span class="line"></span><span class="dtxt">🎁 모은 도토리로 상품 응모</span><span class="line"></span></div>
+    <div class="coin-balance">응모 가능 도토리 <b class="coinBalVal">0</b>개</div>
     <div class="prize-list prizeList"></div>
+    <div id="earnMore"></div>
     <div class="event-foot">
       <button class="reset-link" onclick="resetEntries()">응모 내역 초기화</button>
       <p class="event-hint">체험판: 응모 내역은 이 기기에만 저장돼요.<br/>실제 추첨은 이벤트 종료 후 진행됩니다.</p>
     </div>
 
-    <div class="section-divider"><span class="line"></span><span class="dtxt">✨ 더 즐기기</span><span class="line"></span></div>
-    <button class="action-card" onclick="go('share')">
-      <div class="ac-emo">🏆</div>
-      <div class="ac-text"><div class="ac-t">결산 자랑 카드 만들기</div><div class="ac-d">인스타 스토리용 카드로 저장 · 공유</div></div>
-      <div class="ac-arrow">›</div>
-    </button>
+    <div class="section-divider"><span class="line"></span><span class="dtxt">🎁 6주년 한정 굿즈</span><span class="line"></span></div>
 
     <div class="goods-card">
-      <div class="goods-badge">🔑 6주년 한정 굿즈</div>
       <div class="goods-top">
         <div class="goods-photo">
           <img src="nfc-keyring.png" alt="주말토리 NFC 키링" onerror="this.parentElement.classList.add('noimg'); this.style.display='none';" />
@@ -406,7 +447,7 @@
         <button onclick="postNote(this)">남기기</button>
       </div>
     </div>
-    <div class="guest-count">지금까지 <b class="gCountVal">0</b>개의 마음이 모였어요</div>
+    <div class="guest-count">지금까지 <b class="gCountVal">0</b>명이 축하 메시지를 남겼어요</div>
     <div class="wall wallList"></div>
     <p class="footer-note">따뜻한 한 마디는 다음 편지의 롤링페이퍼로 큐레이션돼요 💌</p>
   </section>
@@ -431,6 +472,20 @@
   </section>
 
   <div class="toast" id="toast"></div>
+  <input type="file" id="certifyFileInput" accept="image/*" style="display:none" onchange="onCertifyFile(this)" />
+
+  <!-- 키링 구매 인증 레이어 팝업 -->
+  <div class="modal-overlay" id="certModal" onclick="if(event.target===this) closeCertModal()">
+    <div class="modal">
+      <button class="modal-x" onclick="closeCertModal()" aria-label="닫기">✕</button>
+      <div class="modal-emo">🔑</div>
+      <h3>6주년 굿즈 소장 인증</h3>
+      <p>주말토리 6주년 굿즈(NFC 키링)를 소장하고<br/><b>텀블벅 결제내역</b>을 첨부하면<br/>도토리 <b style="color:var(--coral)">20개</b>를 드려요!</p>
+      <button class="modal-btn ghost" onclick="buyGoods()">🛒 텀블벅에서 6주년 굿즈 구매하기 →</button>
+      <button class="modal-btn primary" onclick="pickCertifyImage()">📎 텀블벅 결제내역 첨부하기</button>
+      <p class="modal-note">이미 구매하셨다면 결제내역 캡처를 첨부해 주세요.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -442,20 +497,19 @@ const GOODS_URL     = "https://joomaltory.com";   // TODO: 6주년 키링 굿즈
 const IG_HANDLE     = "@joomaltory";
 const TODAY = new Date(2026, 6, 28); // 2026-07-28 (6주년 시점)
 
-/* ── 주말 코인 규칙 ── */
-const COIN_PER_WEEK  = 10;
-const COIN_PER_OPEN  = 30;
-const BADGE_BONUS    = { founder:2000, keeper:1000, regular:500, sprout:200 };
-const DILIGENT_BONUS = 1000;
+/* ── 주말 도토리 적립 규칙 (미션으로 모으기 · 최대 60개) ── */
+const ACORN_OPEN_MAX = 30;   // ① 뉴스레터 오픈율에 비례 (오픈율 100%면 30개, 자동)
+const CERTIFY_BONUS  = 20;   // ② NFC 키링 구매 인증
+const ROLLING_BONUS  = 10;   // ③ 롤링페이퍼 작성
 
-/* ── 이벤트 경품 ── */
+/* ── 생일선물 (모은 도토리로 응모) · img 파일 없으면 이모지 대체 ── */
 const PRIZES = [
-  { id:"kyobo",   emo:"📚", name:"교보문고 1만원권",    value:"10,000원 상당",  cost:500,  tone:"green" },
-  { id:"keyring", emo:"🔑", name:"주말토리 키링 세트",   value:"30,000원 상당",  cost:2000, tone:"coral", img:"nfc-keyring.png" },
-  { id:"spa",     emo:"💆", name:"헤드스파 이용권",      value:"100,000원 상당", cost:6000, tone:"pink" }
+  { id:"kyobo",  emo:"📚", name:"교보문고 1만원권",        cost:10, winners:10, tone:"green", img:"prize-kyobo.png" },
+  { id:"coffee", emo:"☕", name:"커피 오마카세 이용권",     cost:25, winners:3,  tone:"coral", img:"prize-coffee.png" },
+  { id:"spa",    emo:"💆", name:"강남 UHC 헤드스파 이용권", cost:50, winners:1,  tone:"pink",  img:"prize-spa.png" }
 ];
 
-const state = { email:"", nick:"", data:null };
+const state = { email:"", nick:"", data:null, certifyImg:null };
 
 const $ = (s, el=document) => el.querySelector(s);
 const $$ = (s, el=document) => [...el.querySelectorAll(s)];
@@ -536,42 +590,111 @@ function buildData(){
   let missed=MISSED.filter(m=>m.cat===cat); if(missed.length===0) missed=MISSED;
   const miss=missed[Math.floor(rng()*missed.length)];
 
-  const weeks=Math.floor(days/7);
-  const coinSub=weeks*COIN_PER_WEEK;
-  const coinOpen=opened*COIN_PER_OPEN;
-  const coinBonus=(BADGE_BONUS[badge]||0)+(isDiligent?DILIGENT_BONUS:0);
-  const coinTotal=coinSub+coinOpen+coinBonus;
+  const coinOpen=Math.round(openRate/100*ACORN_OPEN_MAX);  // ① 오픈율 도토리 (자동, 최대 30개)
 
-  state.data={ years, days, received, opened, openRate, pct, badge, isDiligent, type, cat, miss, start,
-               coinTotal, coinSub, coinOpen, coinBonus };
+  state.data={ years, days, received, opened, openRate, pct, badge, isDiligent, type, cat, miss, start, coinOpen };
 }
 
 /* =========================================================
-   이벤트 응모 (코인 차감 · 이메일별 localStorage)
+   이벤트 응모 (도토리 차감 · 이메일별 localStorage)
    ========================================================= */
 function ekey(){ return "jmt6_entries_v1_"+(state.email||"").toLowerCase(); }
+function mkey(){ return "jmt6_missions_v1_"+(state.email||"").toLowerCase(); }
 function loadEntries(){ try{ return JSON.parse(localStorage.getItem(ekey()))||{}; }catch(e){ return {}; } }
 function saveEntries(e){ try{ localStorage.setItem(ekey(),JSON.stringify(e)); }catch(e){} }
+function loadMissions(){ try{ return Object.assign({certified:false,wrote:false}, JSON.parse(localStorage.getItem(mkey()))||{}); }catch(e){ return {certified:false,wrote:false}; } }
+function saveMissions(m){ try{ localStorage.setItem(mkey(),JSON.stringify(m)); }catch(e){} }
+function missionBonus(){ const m=loadMissions(); return (m.certified?CERTIFY_BONUS:0)+(m.wrote?ROLLING_BONUS:0); }
+function totalAcorns(){ return (state.data?state.data.coinOpen:0) + missionBonus(); }  // ①오픈율 + ②인증 + ③작성
 function spentCoins(e){ return PRIZES.reduce((s,p)=>s+(e[p.id]||0)*p.cost,0); }
-function coinBalance(){ return (state.data?state.data.coinTotal:0) - spentCoins(loadEntries()); }
+function coinBalance(){ return totalAcorns() - spentCoins(loadEntries()); }
+
+/* 미션 ②: 키링 구매 인증 (+20) · 레이어 팝업 → 구매 링크 / 결제내역 첨부 */
+function openCertModal(){ const el=document.getElementById("certModal"); if(el) el.classList.add("show"); }
+function closeCertModal(){ const el=document.getElementById("certModal"); if(el) el.classList.remove("show"); }
+function pickCertifyImage(){ const i=document.getElementById("certifyFileInput"); if(i) i.click(); }
+function onCertifyFile(input){
+  const f = input.files && input.files[0];
+  input.value = "";  // 같은 파일 다시 선택 가능하게
+  if(!f) return;
+  const rd = new FileReader();
+  rd.onload = e => {
+    state.certifyImg = e.target.result;
+    closeCertModal();
+    const m = loadMissions();
+    if(!m.certified){ m.certified=true; saveMissions(m); afterEarn(`텀블벅 결제내역 인증 완료! 도토리 ${CERTIFY_BONUS}개 적립 🌰`); }
+    else { afterEarn("결제내역을 다시 첨부했어요 ✅"); }
+  };
+  rd.readAsDataURL(f);
+}
+/* 미션 ③으로 이동 (홈=폼으로 스크롤 / 스토리=작성 슬라이드) */
+function goRolling(){
+  if($("#story").classList.contains("active")){ showSlide(ROLLING_SLIDE); return; }
+  const f=$("#home .guest-form"); if(f){ f.scrollIntoView({behavior:"smooth", block:"center"}); const t=f.querySelector("textarea"); if(t) t.focus(); }
+}
+/* 적립 후 화면 갱신 (스토리면 현재 슬라이드 다시 그림) */
+function afterEarn(msg){
+  if(msg) toast(msg);
+  if($("#story").classList.contains("active")) showSlide(storyIdx);
+  else { renderMissions(); renderPrizes(); }
+}
+function renderMissions(){
+  const d=state.data, m=loadMissions();
+  const openA = d ? d.coinOpen : 0;
+  $$(".acornEarnedVal").forEach(el=> el.textContent = totalAcorns().toLocaleString("ko-KR"));
+  const rows = [
+    { id:"open", emo:"📬", tone:"green", name:"그동안 뉴스레터 열어보기", sub:`오픈율 ${d?d.openRate:0}% · 자동 반영`, plus:openA, done:true },
+    { id:"cert", emo:"🔑", tone:"coral", name:"6주년 굿즈 소장하기", plus:CERTIFY_BONUS, done:m.certified, onclick:"openCertModal()", btn:"인증하기" },
+    { id:"roll", emo:"🖊️", tone:"pink",  name:"축하 메시지 남기기", plus:ROLLING_BONUS, done:m.wrote, onclick:"goRolling()", btn:"작성하기" }
+  ];
+  const html = rows.map(r=>{
+    const cta = r.done
+      ? `<span class="mt-done">완료</span>${(r.id==="cert" && state.certifyImg)?`<img class="cert-thumb" src="${state.certifyImg}" alt="결제내역 인증" />`:``}`
+      : `<button class="mt-btn" onclick="${r.onclick}">${r.btn}</button>`;
+    return `<div class="m-tile t-${r.tone}${r.done?' done':''}">
+      <div class="mt-badge">${r.done?'✓':r.emo}</div>
+      <div class="mt-body">
+        <div class="mt-title">${r.name}</div>
+        ${r.sub?`<div class="mt-sub">${r.sub}</div>`:``}
+        <div class="mt-reward">🌰 도토리 +${r.plus}개</div>
+      </div>
+      <div class="mt-right">${cta}</div>
+    </div>`;
+  }).join("");
+  $$(".missionBoard").forEach(b=> b.innerHTML = html);
+}
+
 function renderPrizes(){
   const e=loadEntries(), bal=coinBalance();
   $$(".coinBalVal").forEach(el=> el.textContent=bal.toLocaleString("ko-KR"));
   const html = PRIZES.map(p=>{
-    const cnt=e[p.id]||0, can=bal>=p.cost;
-    const media = p.img
-      ? `<div class="prize-media t-${p.tone}" data-emo="${p.emo}"><img src="${p.img}" alt="" onerror="this.parentElement.classList.add('noimg'); this.style.display='none';" /></div>`
-      : `<div class="prize-media t-${p.tone}">${p.emo}</div>`;
-    return `<div class="prize-card">${media}
-      <div class="prize-info"><div class="pname">${p.name}</div><div class="pval">${p.value}</div><div class="pcost">응모 1회 · <b>${p.cost.toLocaleString("ko-KR")} 🪙</b></div></div>
-      <div class="prize-right">${cnt?`<div class="pentries">응모 ${cnt}회</div>`:``}<button class="pbtn" ${can?"":"disabled"} onclick="enterPrize('${p.id}')">${can?"응모":"코인 부족"}</button></div>
+    const cnt=e[p.id]||0;
+    return `<div class="prize-card">
+      <div class="prize-media t-${p.tone}" data-emo="${p.emo}"><img src="${p.img}" alt="" onerror="this.parentElement.classList.add('noimg'); this.remove();" /></div>
+      <div class="prize-info">
+        <div class="pname">${p.name}</div>
+        <div class="pmeta">${p.winners}명 추첨${cnt?` · 내 응모 ${cnt}회`:``}</div>
+      </div>
+      <div class="prize-right">
+        <button class="pbtn" onclick="enterPrize('${p.id}')">${cnt?"한 번 더 응모":"응모하기"}</button>
+        <div class="pcost-cap">도토리 ${p.cost}개</div>
+      </div>
     </div>`;
   }).join("");
   $$(".prizeList").forEach(list=> list.innerHTML=html);
+  // 마지막 페이지(홈): 도토리를 다 쓴 경우 미션으로 더 모으라고 안내
+  const em=document.getElementById("earnMore");
+  if(em){
+    const minCost=Math.min(...PRIZES.map(p=>p.cost));
+    const spent=spentCoins(e);
+    em.innerHTML = (spent>0 && bal<minCost)
+      ? `<div class="earn-more">🌰 도토리를 거의 다 쓰셨네요!<br/><b>도토리 모으기 미션</b>으로 더 모아 다시 응모해보세요.<button class="btn-primary" onclick="openApply()">도토리 더 모으러 가기 →</button></div>`
+      : ``;
+  }
 }
 function enterPrize(id){
   const p=PRIZES.find(x=>x.id===id); if(!p) return;
-  if(coinBalance()<p.cost){ toast("코인이 부족해요 🪙"); return; }
+  if(coinBalance()<p.cost){ toast("도토리가 부족해요! 아래 미션으로 더 모아주세요 🌰"); return; }
   const e=loadEntries(); e[id]=(e[id]||0)+1; saveEntries(e); renderPrizes();
   toast(`${p.name} 응모 완료! (누적 ${e[id]}회) 🎉`);
 }
@@ -581,7 +704,7 @@ function resetEntries(){ saveEntries({}); renderPrizes(); toast("응모 내역�
    로딩 → 결산 스토리
    ========================================================= */
 function runLoading(){
-  const lines=["구독 기록을 불러오는 중…","받은 편지를 세는 중…","오픈율을 계산하는 중…","열람 패턴을 분석하는 중…","주말 코인을 정산하는 중…"];
+  const lines=["구독 기록을 불러오는 중…","받은 편지를 세는 중…","오픈율을 계산하는 중…","열람 패턴을 분석하는 중…","주말 도토리를 세는 중…"];
   let i=0; const el=$("#loadLine"); el.textContent=lines[0];
   const iv=setInterval(()=>{ i++; if(i<lines.length) el.textContent=lines[i]; },560);
   setTimeout(()=>{ clearInterval(iv); buildStory(); go('story'); showSlide(0); }, 2900);
@@ -596,6 +719,9 @@ function countUp(el, target, dur=1200, suffix=""){
 
 /* ── 스토리 슬라이드 ── */
 let STORY=[], storyIdx=0;
+const ROLLING_SLIDE = 4; // 롤링페이퍼 작성 슬라이드 index
+const APPLY_SLIDE   = 5; // 상품 응모 페이지(미션+응모) index
+function openApply(){ go('story'); showSlide(APPLY_SLIDE); }
 function buildStory(){
   const d=state.data, t=TYPE_INFO[d.type], c=CAT_INFO[d.cat], b=BADGES[d.badge], nick=escapeHtml(state.nick);
   STORY = [
@@ -618,66 +744,40 @@ function buildStory(){
       <div class="s-huge c"><span data-count="${d.openRate}" data-suffix="%">0</span></div>
       <div class="s-gauge"><i data-gauge="${d.openRate}"></i></div>
       <div style="margin-top:16px;"><span class="pct-chip">🏅 전체 구독자 상위 ${d.pct}%</span></div>
-      <div class="s-cap">받은 편지 ${d.received}통 중 <b>${d.opened}통</b>, 이 정도면 진심이죠.</div>` },
-    { render:()=>`<div class="s-kicker">❤️ 가장 사랑한 주제</div>
-      <div class="s-emo">${c.emo}</div>
-      <div class="s-big-word">${c.label}</div>
-      <div class="s-cap">${nick}님의 주말은 이걸로 가득 채워졌어요.</div>` },
-    { render:()=>`<div class="s-kicker">🔖 아직 안 열어본 편지</div>
-      <a class="s-miss" href="${d.miss.url}" target="_blank" rel="noopener">
-        <div class="miss-emo">${d.miss.emo}</div>
-        <div class="miss-t">${d.miss.t}<small>지금 읽으러 가기 →</small></div>
-      </a>
-      <div class="s-cap">이 명작, 놓치기 아까워요.</div>` },
-
-    /* ── 액션 ① 코인 & 응모 ── */
-    { action:true, hint:"원하는 선물에 응모하고 다음으로 →", render:()=>`
-      <div class="s-kicker">🪙 나의 주말 코인</div>
-      <div class="s-coin-hero"><span data-count="${d.coinTotal}" data-suffix=" 🪙">0</span></div>
-      <div class="coin-break" style="margin-top:14px;">
-        <span>⏳ 구독 ${d.coinSub.toLocaleString("ko-KR")}</span>
-        <span>📬 열람 ${d.coinOpen.toLocaleString("ko-KR")}</span>
-        <span>🎖️ 보너스 ${d.coinBonus.toLocaleString("ko-KR")}</span>
-      </div>
-      <div class="s-actionhead">🎁 이 코인으로 응모하세요</div>
-      <div class="coin-balance">응모 가능 코인 <b class="coinBalVal">0</b> 🪙</div>
-      <div class="prize-list prizeList"></div>
-      <div class="event-foot"><button class="reset-link" onclick="resetEntries()">응모 내역 초기화</button></div>` },
-
-    /* ── 액션 ② NFC 키링 구매 ── */
-    { action:true, hint:"넘기면 롤링페이퍼로 마무리 →", render:()=>`
-      <div class="s-kicker">🎁 6주년 기념 선물</div>
-      <div class="goods-card" style="text-align:left; margin-top:6px;">
-        <div class="goods-badge">🔑 6주년 한정 굿즈</div>
-        <div class="goods-top">
-          <div class="goods-photo">
-            <img src="nfc-keyring.png" alt="주말토리 NFC 키링" onerror="this.parentElement.classList.add('noimg'); this.style.display='none';" />
-            <div class="ph-tag">실제 제품 컷</div>
-          </div>
-          <div class="goods-info">
-            <h3>주말토리<br/>NFC 키링</h3>
-            <p class="g-sub">폰에 톡 태그하면<br/><b>“이번 주말 뭐하지?”</b>가<br/>바로 시작돼요.</p>
-          </div>
-        </div>
-        <div class="g-meta"><span>🎁 6주년 기념가</span><span>⏳ 한정 수량</span><span>🚀 NFC 태깅</span></div>
-        <button class="g-btn" onclick="buyGoods()">6주년 키링 구매하러 가기 →</button>
-      </div>
-      <div class="s-cap">6주년을 기념해 딱 한정 수량으로만 만나볼 수 있어요.</div>` },
-
-    /* ── 액션 ③ 롤링페이퍼 (마지막 · 모두의 마음이 쫙) ── */
-    { action:true, render:()=>`
+      <div class="s-cap">받은 편지 ${d.received}통 중 <b>${d.opened}통</b>을 열어봤어요.<br/>이 오픈율로 <b style="color:#E39A00">🌰 도토리 ${d.coinOpen}개</b>를 모았어요!</div>` },
+    /* ── 미션 ③ 롤링페이퍼 작성 (+10) ── */
+    { action:true, hint:"축하 인사를 남기고 다음으로 →", render:()=>{
+      const m=loadMissions();
+      return `
       <div class="s-kicker">🖊️ 6주년 롤링페이퍼</div>
-      <div class="s-big-word" style="font-size:24px;">우리가 함께 쓴 <span style="color:var(--coral)">6주년</span></div>
-      <p class="s-cap" style="margin-top:10px;">한 마디 남기면, 모두의 마음이 여기 모여요.<br/>다음 편지에서 소개될지도!</p>
-      <div class="guest-form" style="margin-top:16px; text-align:left;">
-        <textarea maxlength="140" placeholder="주말토리와의 6년, 한 문장으로 남겨볼까요?"></textarea>
+      <div class="s-big-word" style="font-size:24px; margin-top:6px;">주말토리에게<br/>축하 인사를 남겨주세요</div>
+      ${ m.wrote ? `<div class="certify-done" style="margin-top:16px;">✓ 축하 메시지를 남겼어요</div>` : `` }
+      <div class="guest-form" style="margin-top:18px; text-align:left;">
+        <textarea maxlength="140" placeholder="6주년을 맞은 주말토리에게 한 마디 남겨주세요"></textarea>
         <div class="row">
-          <input type="text" maxlength="12" placeholder="닉네임" />
+          <input type="text" maxlength="12" value="${escapeHtml(state.nick)}" placeholder="닉네임" />
           <button onclick="postNote(this)">남기기</button>
         </div>
       </div>
-      <div class="guest-count">지금까지 <b class="gCountVal">0</b>개의 마음이 모였어요</div>
-      <div class="wall wallList" style="margin-top:12px; text-align:left;"></div>` }
+      <div class="guest-count">지금까지 <b class="gCountVal">0</b>명이 축하 메시지를 남겼어요</div>
+      <div class="wall wallList" style="margin-top:12px; text-align:left;"></div>` } },
+
+    /* ── 마지막 · 주말토리 생일 축하 & 선물 응모 (선물 위 · 축하=수단 아래) ── */
+    { action:true, render:()=>`
+      <div class="s-kicker">🎂 주말토리 6번째 생일</div>
+      <div class="s-big-word" style="font-size:25px; margin-top:6px;">축하하고<br/>생일선물 받아가세요 🎁</div>
+      <p class="s-cap" style="margin-top:10px; font-size:12.5px;">주말토리를 축하할수록 도토리가 쌓여요.<br/>모은 도토리로 생일선물에 응모하세요!</p>
+
+      <div class="section-divider"><span class="line"></span><span class="dtxt">🎁 생일선물 응모</span><span class="line"></span></div>
+      <div class="coin-balance">응모 가능 도토리 <b class="coinBalVal">0</b>개 🌰</div>
+      <p class="odds-note">🎟️ 여러 번 응모할수록 당첨 확률이 올라가요!</p>
+      <div class="prize-list prizeList"></div>
+
+      <div class="section-divider" style="margin-top:40px;"><span class="line"></span><span class="dtxt">🎂 축하하고 도토리 모으기</span><span class="line"></span></div>
+      <p class="mission-lead">축하 미션을 완료하면 응모할 도토리가 쌓여요!</p>
+      <div class="mission-board missionBoard"></div>
+
+      <div class="event-foot"><button class="reset-link" onclick="resetEntries()">응모 내역 초기화</button></div>` }
   ];
   $("#storyBar").innerHTML = STORY.map(()=>'<i></i>').join('');
 }
@@ -697,7 +797,7 @@ function showSlide(i){
   const inner=$(".slide-inner",wrap);
   $$("[data-count]",inner).forEach(el=> countUp(el, +el.dataset.count, 1100, el.dataset.suffix||""));
   const g=$("[data-gauge]",inner); if(g) setTimeout(()=> g.style.width=g.dataset.gauge+"%",160);
-  renderPrizes(); renderWall();
+  renderMissions(); renderPrizes(); renderWall();
   wrap.scrollTop=0;
 }
 function nextSlide(){ if(storyIdx>=STORY.length-1){ gotoHome(); } else showSlide(storyIdx+1); }
@@ -715,10 +815,12 @@ function renderHome(){
     <img class="tori" src="${t.img}" alt="${t.name}" />
     <div class="r-name"><b>${nick}</b>님의 6주년 결산</div>
     <div class="r-chips"><span class="tier-pill">${b.emo} ${b.name}</span><span class="r-type">${t.name}</span></div>
-    <div class="r-coin">🪙 <b>${d.coinTotal.toLocaleString("ko-KR")}</b> 주말 코인</div>
+    <div class="r-coin">🌰 주말 도토리 <b class="acornEarnedVal">0</b>개</div>
     <button class="replay-btn" onclick="replayStory()">↺ 결산 스토리 다시 보기</button>
   `;
-  renderPrizes(); renderWall(); drawShareCard();
+  renderMissions(); renderPrizes(); renderWall(); drawShareCard();
+  // 롤링페이퍼 닉네임 자동 입력 (스티비 닉네임 · 비어 있을 때만, 유저 수정분 보존)
+  const gi=$("#home .guest-form input"); if(gi && !gi.value) gi.value=state.nick;
 }
 
 /* =========================================================
@@ -803,9 +905,12 @@ function postNote(btn){
   const name = (ni ? ni.value : "").trim() || state.nick || "익명의 구독자";
   if(!msg){ toast("한 마디 남겨주세요 🙂"); if(ta) ta.focus(); return; }
   const list=loadNotes(); list.unshift({name,msg}); saveNotes(list);
-  if(ta) ta.value=""; if(ni) ni.value="";
+  if(ta) ta.value="";   // 메시지만 비우고 닉네임은 유지
   renderWall();
-  toast("소중한 한 마디 감사해요 💌");
+  // 미션 ③: 첫 작성 시 도토리 +10
+  const mi=loadMissions(); let earned=false;
+  if(!mi.wrote){ mi.wrote=true; saveMissions(mi); earned=true; }
+  afterEarn(earned ? `축하 메시지를 남겼어요! 도토리 ${ROLLING_BONUS}개 적립 🌰` : "소중한 축하 메시지 감사해요 💌");
 }
 
 /* 초기화 */
